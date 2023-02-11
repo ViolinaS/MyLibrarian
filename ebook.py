@@ -4,7 +4,7 @@ import os
 
 
 __doc__ = """
-This module contains the databases of the project.
+This module contains the database and tables of the project.
 """
 path = os.path.dirname(os.path.abspath(__file__))
 
