@@ -19,11 +19,12 @@ class Database(object):
             self.cursor.execute('PRAGMA foreign_keys = ON')
             self.conn.commit()
         
-        except sqlite3.Error as err:
+        except Error as err:
             print(err)
             print('Failed to connect to the database')
             
-# create table books
+
+# table --> books
 class Books(Database):
     def __init__(self):
         Database.__init__(self)
@@ -38,7 +39,7 @@ class Books(Database):
         self.conn.commit()
         
         
-# create table authors
+# table --> authors
 class Authors(Database):
     def __init__(self):
         Database.__init__(self)
@@ -46,12 +47,12 @@ class Authors(Database):
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             books_id INTEGER NOT NULL,
-            FOREIGN KEY(books_id) REFERENCES books(id)
+            FOREIGN KEY(books_id) REFERENCES books(id) ON DELETE CASCADE
         )''')
         self.conn.commit()
         
         
-# create table genres
+# table --> genres
 class Genres(Database):
     def __init__(self):
         Database.__init__(self)
@@ -61,7 +62,8 @@ class Genres(Database):
         )''')
         self.conn.commit()
         
-# create table author_genre_book
+
+# table --> author_genre_book
 class Author_Genre_Book(Database):
     def __init__(self):
         Database.__init__(self)
@@ -69,19 +71,19 @@ class Author_Genre_Book(Database):
             author_id INTEGER REFERENCES authors(id),
             book_id INTEGER REFERENCES books(id),
             genre_id INTEGER REFERENCES genres(id),
-            CONSTRAINT pk_author_genre_book PRIMARY KEY (author_id, book_id, genre_id)
+            CONSTRAINT pk_author_genre_book PRIMARY KEY (author_id, book_id, genre_id) 
         )''')
         self.conn.commit()  
         
 
-# create table favorite_shelf
+# table --> favorite_shelf
 class Favorite_shelf(Database):
     def __init__(self):
         Database.__init__(self)
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS favorite_shelf (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             book_id INTEGER,
-            FOREIGN KEY(book_id) REFERENCES books(id))''')
+            FOREIGN KEY(book_id) REFERENCES books(id) ON DELETE CASCADE)''')
             
         self.conn.commit()  
         
