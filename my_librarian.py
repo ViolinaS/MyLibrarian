@@ -2,6 +2,11 @@ from ebook_sql_db import books, authors, genres, author_genre_book, favorite
 import tkinter as tk
 import tkinter.messagebox
 
+__doc__ = """
+This class is designed to be used with the e-library.db
+"""
+
+
 class MyLibrarian:
     def __init__(self):
         # creation of the root window
