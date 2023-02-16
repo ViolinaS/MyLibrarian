@@ -1,13 +1,14 @@
-from ebook_sql_db import books, authors, genres, author_genre_book, favorite
+from ebook_sql_db import books, authors, genres, favorite
 import tkinter as tk
 import tkinter.messagebox
-
-__doc__ = """
-This class is designed to be used with the e-library.db
-"""
+from tkinter import ttk, filedialog, Event
 
 
 class MyLibrarian:
+    __doc__ = """
+    This class is designed to be used with the e-library.db
+    """
+
     def __init__(self):
         # creation of the root window
         self.main_window = tk.Tk()
@@ -20,9 +21,8 @@ class MyLibrarian:
         self.main_frame.pack(fill=tk.BOTH, expand=True)
         
         
-        __doc__ = """
-        Creation of the Menu buttons
-        """ 
+        """Creation of the Menu buttons""" 
+        
         # button to add new book
         self.add_book_button = tk.Button(self.main_frame, text="Add New Book", command=self.add_book)
         self.add_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
@@ -39,25 +39,106 @@ class MyLibrarian:
         self.book_shelf_button = tk.Button(self.main_frame, text="Book's Shelf", command=self.book_shelf)
         self.book_shelf_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
-        # create button Favorites
+        # button Favorites
         self.favorites_button = tk.Button(self.main_frame, text="Favorites", command=self.favorites)
         self.favorites_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
-        # create button Help
+        # button Help
         self.help_button = tk.Button(self.main_frame, text="Help", command=self.help)
         self.help_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
-        # create button Exit
-        self.exit_button = tk.Button(self.main_frame, text="Exit", command=self.exit)
+        # button Exit
+        self.exit_button = tk.Button(self.main_frame, text="Exit", command=self.main_window.destroy)
         self.exit_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
-        # run main loop
+        """run main loop"""
         tk.mainloop()
         
-        # create self.add_book function
+        # self.add_book function
     def add_book(self):
-        tk.messagebox.showinfo("Add New Book", "Enter the title of the book")
+        __doc__= """
+        This function is used to prepare to add a new book to the e-library.db
+        Function is called by the add_book_button. 
+        It starts new window and creates menu entries with labels above them.
+        """
+        # building new window
+        self.new_book_window = tk.Toplevel(self.main_window)
+        self.new_book_window.title("Add New Book")
+        self.new_book_window.geometry("500x500")
+        self.new_book_window.resizable(True, True)
+        self.new_book_window.transient(self.main_window)
+        self.new_book_window.grab_set()
+        
+        # building new window frame
+        self.new_book_frame = tk.Frame(self.new_book_window, borderwidth=1, relief="ridge")
+        self.new_book_frame.pack(fill=tk.BOTH, expand=True)
+        
+        # Book's Title entry with its label
+        self.title_lable = tk.Label(self.new_book_frame, text="Book's title: ")
+        self.title_entry = tk.Entry(self.new_book_frame)
+        
+        # Book's Author entry with its label
+        self.author_lable = tk.Label(self.new_book_frame, text="Author's name: ")
+        self.author_entry = tk.Entry(self.new_book_frame)
+        
+        # Book's Genre entry with its label
+        self.genre_lable = tk.Label(self.new_book_frame, text="Genre: ")
+        self.genre_entry = tk.Entry(self.new_book_frame)
+        
+        # Book's Release year entry with its label
+        self.release_year_lable = tk.Label(self.new_book_frame, text="Release year: ")
+        self.release_year_entry = tk.Entry(self.new_book_frame)
+        
+        # Book's Description entry for Text with its label
+        self.description_lable = tk.Label(self.new_book_frame, text="Description: ")
+        self.description_entry = tk.Text(self.new_book_frame, width=500, height=5)
+        
+        # Book's Publisher entry with its label
+        self.publisher_lable = tk.Label(self.new_book_frame, text="Publisher: ")
+        self.publisher_entry = tk.Entry(self.new_book_frame)
+        
+        # Book's filepath on the file system
+        self.filepath_lable = tk.Label(self.new_book_frame, text="Filepath to your book: ")
+        
+        # Building the menu entries
+        self.title_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        self.title_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        self.author_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        self.author_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        self.genre_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        self.genre_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        self.release_year_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        self.release_year_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        self.description_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        self.description_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        self.publisher_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        self.publisher_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        self.filepath_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        
+        
+        # create the browse button
+        self.filepath_button = tk.Button(self.new_book_frame, text="Browse", command= self.browse_file)
+        self.filepath_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        
+        # create ok button
+        self.ok_button = tk.Button(self.new_book_frame, text="OK", command=self.add_book_to_db)
+        self.ok_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        
+        # create cancel button
+        self.cancel_button = tk.Button(self.new_book_frame, text="Cancel", command=self.new_book_window.destroy)
+        self.cancel_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        
+    def browse_file(self):
+        self.filepath_entry = filedialog.askdirectory(initialdir="C:\\Users\\user\\Desktop\\")
+        return self.filepath_entry
     
+    
+    def add_book_to_db(self):
+        __doc__= """
+        This function is used to write a new book to the e-library.db
+        """
+        pass
+
     # create self.delete_book function
     def delete_book(self):
         tk.messagebox.showinfo("Delete a Book", "Delete the title of the book")
