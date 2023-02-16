@@ -21,7 +21,7 @@ class MyLibrarian:
         self.main_frame.pack(fill=tk.BOTH, expand=True)
         
         
-        """Creation of the Menu buttons""" 
+        """Creation of the Menu buttons in the root window""" 
         
         # button to add new book
         self.add_book_button = tk.Button(self.main_frame, text="Add New Book", command=self.add_book)
@@ -129,15 +129,23 @@ class MyLibrarian:
         self.cancel_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
     def browse_file(self):
-        self.filepath_entry = filedialog.askdirectory(initialdir="C:\\Users\\user\\Desktop\\")
+        self.filepath_entry = filedialog.askdirectory()
         return self.filepath_entry
     
-    
     def add_book_to_db(self):
-        __doc__= """
+        __doc__ = """
         This function is used to write a new book to the e-library.db
         """
-        pass
+        filepath = self.browse_file
+        try:
+            if filepath == True:
+                books.cursor.execute("INSERT INTO books (title, author, genre, release_year, description,\
+                publisher, link) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                        (self.title_entry.get(), self.author_entry.get(), self.genre_entry.get(), self.release_year_entry.get(),
+                        self.description_entry.get("1.0", tk.END), self.publisher_entry.get(), filepath))
+                tk.messagebox.showinfo("added book")
+        except:
+            tk.messagebox.showerror("Error", "Something went wrong")
 
     # create self.delete_book function
     def delete_book(self):
