@@ -1,6 +1,7 @@
 from ebook_sql_db import books, authors, genres, favorite
 import tkinter as tk
 from tkinter import ttk, filedialog, Event, messagebox
+import sqlite3
 
 
 class MyLibrarian:
@@ -114,7 +115,7 @@ class MyLibrarian:
         self.filepath_entry = filedialog.askopenfilename()
         self.filepath_entry_text = tk.Entry(self.new_book_frame)
         self.filepath_entry_text.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
-        self.filepath_entry_text.insert(tk.END, self.filepath_entry)
+        self.filepath_entry_text.insert(tk.END, (self.filepath_entry))
         
         
         # create ok button
@@ -148,11 +149,48 @@ class MyLibrarian:
             
     def save_book_to_db(self):
         __doc__ = """
-        This function is used to confirm a new book to the e-library.db
+        This function is used to write and confirm a new book to the e-library.db
         """
         
+        try:
+            authors.cursor.execute("INSERT INTO authors (name) VALUES (?)", (self.author_entry.get(),))
+            authors.conn.commit()
+        except sqlite3.Error as err:
+            print(err, "Database error")
+            messagebox.showerror("Error", "Author is not added")
+        
+        try:
+            genres.cursor.execute("INSERT INTO genres (name) VALUES (?)", (self.genre_entry.get(),))
+            genres.conn.commit()
+        except sqlite3.Error as err:
+            print(err, "Database error")
+            messagebox.showerror("Error", "Genre is not added")
+            
+        try:            
+            author = authors.cursor.execute("""SELECT id FROM authors WHERE name =?""", (self.author_entry.get(),)) 
+            author_id = author.fetchone()[0]
+            print(author_id)
+            genre = genres.cursor.execute("""SELECT id FROM genres WHERE name =?""", (self.genre_entry.get(),))
+            genre_id = genre.fetchone()[0]
+            print(genre_id)
+            
+            books.cursor.execute("INSERT INTO books (title, year, description, publisher, link, author_id, genre_id)\
+            VALUES (?, ?, ?, ?, ?, ?, ?)",
+                                    (self.title_entry.get(), self.release_year_entry.get(), 
+                                    self.description_entry.get("1.0", tk.END), self.publisher_entry.get(), 
+                                    self.filepath_entry_text.get(), (author_id), (genre_id),))
+            books.conn.commit()
+        except sqlite3.Error as err:
+            print(err, "Database error")
+            messagebox.showerror("Error", "Book is not added")
+                    
+        authors.conn.close()
+        genres.conn.close()
+        books.conn.close()
         self.new_book_window.destroy()
         messagebox.showinfo("Saved book", "Book saved successfully")
+    
+        
 
     # create self.delete_book function
     def delete_book(self):
