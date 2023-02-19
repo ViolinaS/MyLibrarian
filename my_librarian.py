@@ -125,27 +125,7 @@ class MyLibrarian:
         # create cancel button
         self.cancel_button = tk.Button(self.new_book_frame, text="Cancel", command=self.new_book_window.destroy)
         self.cancel_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
-        
 
-    
-        
-    
-    # def add_book_to_db(self):
-        # __doc__ = """
-        # This function is used to write a new book to the e-library.db
-        # """
-        
-        # try:
-            # filepath = self.filepath_entry
-            # print(filepath)
-            # books.cursor.execute("INSERT INTO books (title, author_id, genre_id, release_year, description,\
-            # publisher, link) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                        # (self.title_entry.get(), self.author_entry.get(), self.genre_entry.get(), self.release_year_entry.get(),
-                        # self.description_entry.get("1.0", tk.END), self.publisher_entry.get(), filepath))
-            # books.conn.commit()
-            
-        # except:
-            # messagebox.showerror("Error", "Something went wrong")
             
     def save_book_to_db(self):
         __doc__ = """
@@ -180,6 +160,7 @@ class MyLibrarian:
                                     self.description_entry.get("1.0", tk.END), self.publisher_entry.get(), 
                                     self.filepath_entry_text.get(), (author_id), (genre_id),))
             books.conn.commit()
+            messagebox.showinfo("Saved book", "Book saved successfully")
         except sqlite3.Error as err:
             print(err, "Database error")
             messagebox.showerror("Error", "Book is not added")
@@ -188,14 +169,66 @@ class MyLibrarian:
         genres.conn.close()
         books.conn.close()
         self.new_book_window.destroy()
-        messagebox.showinfo("Saved book", "Book saved successfully")
+        
     
         
 
     # create self.delete_book function
     def delete_book(self):
-        messagebox.showinfo("Delete a Book", "Delete the title of the book")
+        # create document
+        __doc__ = """
+        This function is used to prepare listbox with book titles from books table 
+        for selection to delete. This function is called by the delete_book_button.      
+        """
+        
+        # building new window
+        self.delete_window = tk.Toplevel(self.main_window)
+        self.delete_window.title("Choose book to delete")
+        self.delete_window.geometry("500x500")
+        self.delete_window.resizable(True, True)
+        self.delete_window.transient(self.main_window)
+        self.delete_window.grab_set()
+        
+        # building new window frame
+        self.delete_frame = tk.Frame(self.delete_window, borderwidth=1, relief="ridge")
+        self.delete_frame.pack(fill=tk.BOTH, expand=True)
+        
+        # create listbox wiget for all books in the database
+        self.listbox = tk.Listbox(self.delete_frame)
+        self.listbox.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        
+        # insert all books in the listbox from the database, table books
+        choose_book = books.cursor.execute("""SELECT title FROM books""")
+        result = choose_book.fetchall()
+        for book in result:
+            self.listbox.insert(tk.END, book[0])
+        
+        # create delete button
+        self.delete_button = tk.Button(self.delete_frame, text="Delete", command=self.delete_this_book)
+        self.delete_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        
+        # create cancel button
+        self.cancel_button = tk.Button(self.delete_frame, text="Cancel", command=self.delete_window.destroy)
+        self.cancel_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        
     
+    
+    def delete_this_book(self):
+        __doc__ = """
+        This function is used to delete selected book from the e-library.db
+        """
+        try:
+            books.cursor.execute("DELETE FROM books WHERE title =?", (self.listbox.get(self.listbox.curselection()[0]),))
+            books.conn.commit()
+            messagebox.showinfo("Deleted book", "Book deleted successfully")
+        except sqlite3.Error as err:
+            print(err, "Database error")
+            messagebox.showerror("Error", "Book is not deleted")
+        
+            books.conn.close()
+            self.listbox.delete(self.listbox.curselection()[0])
+        self.delete_window.destroy()
+
     # create self.find_book function
     def find_book(self):
         messagebox.showinfo("Find a Book", "Find the title of the book")
