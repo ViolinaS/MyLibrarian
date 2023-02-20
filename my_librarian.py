@@ -1,6 +1,7 @@
 from ebook_sql_db import books, authors, genres, favorite
 import tkinter as tk
 from tkinter import ttk, filedialog, Event, messagebox
+from tkinter.scrolledtext import ScrolledText
 import sqlite3
 
 
@@ -13,8 +14,8 @@ class MyLibrarian:
         # creation of the root window
         self.main_window = tk.Tk()
         self.main_window.title("My Librarian")
-        self.main_window.geometry("500x500")
-        self.main_window.resizable(True, True)
+        self.main_window.geometry("300x500")
+        self.main_window.resizable(False, False)
         
         # creation of the main_window frame
         self.main_frame = tk.Frame(self.main_window, borderwidth=1, relief="ridge")
@@ -64,8 +65,8 @@ class MyLibrarian:
         # building new window
         self.new_book_window = tk.Toplevel(self.main_window)
         self.new_book_window.title("Add New Book")
-        self.new_book_window.geometry("500x500")
-        self.new_book_window.resizable(True, True)
+        self.new_book_window.geometry("300x500")
+        self.new_book_window.resizable(False, False)
         self.new_book_window.transient(self.main_window)
         self.new_book_window.grab_set()
         
@@ -165,9 +166,6 @@ class MyLibrarian:
             print(err, "Database error")
             messagebox.showerror("Error", "Book is not added")
                     
-        authors.conn.close()
-        genres.conn.close()
-        books.conn.close()
         self.new_book_window.destroy()
         
     
@@ -184,8 +182,8 @@ class MyLibrarian:
         # building new window
         self.delete_window = tk.Toplevel(self.main_window)
         self.delete_window.title("Choose book to delete")
-        self.delete_window.geometry("500x500")
-        self.delete_window.resizable(True, True)
+        self.delete_window.geometry("300x500")
+        self.delete_window.resizable(False, False)
         self.delete_window.transient(self.main_window)
         self.delete_window.grab_set()
         
@@ -225,14 +223,151 @@ class MyLibrarian:
             print(err, "Database error")
             messagebox.showerror("Error", "Book is not deleted")
         
-            books.conn.close()
             self.listbox.delete(self.listbox.curselection()[0])
         self.delete_window.destroy()
 
     # create self.find_book function
     def find_book(self):
-        messagebox.showinfo("Find a Book", "Find the title of the book")
+        # create document
+        __doc__ = """
+        This function is used to search books and authors from database. 
+        This function is called by the find_book_button.      
+        """
+        # building new window
+        self.search_window = tk.Toplevel(self.main_window)
+        self.search_window.title("Choose book to delete")
+        self.search_window.geometry("300x500")
+        self.search_window.resizable(False, False)
+        self.search_window.transient(self.main_window)
+        self.search_window.grab_set()
         
+        # building new window frames
+        self.search_frame_all_books = tk.Frame(self.search_window, borderwidth=1, relief="ridge")
+        self.search_frame_all_books.pack(fill=tk.BOTH, expand=True)
+        self.search_frame_all_authors = tk.Frame(self.search_window, borderwidth=1, relief="ridge")
+        self.search_frame_all_authors.pack(fill=tk.BOTH, expand=True)
+        self.search_frame_by_request = tk.Frame(self.search_window, borderwidth=1, relief="ridge")
+        self.search_frame_by_request.pack(fill=tk.BOTH, expand=True)
+        
+        # create show button --> all books
+        self.search_button_books = tk.Button(self.search_frame_all_books, text="Show all Books", 
+                                    command=self.show_all_books)
+        self.search_button_books.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        
+        # create show button --> all authors
+        self.search_button_authors = tk.Button(self.search_frame_all_authors, text="Show all Authors", command=self.show_all_authors)
+        self.search_button_authors.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        
+        # create label for search by request
+        self.search_by_request_label = tk.Label(self.search_frame_by_request, 
+                                                text="Search by request:\n Input Book's title or Author's name, genre or publisher: ")
+        self.search_by_request_label.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        
+        # create search by request entry
+        self.search_by_request_entry = tk.Entry(self.search_frame_by_request, width=30)
+        self.search_by_request_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        
+        # create search button --> by request
+        self.search_button = tk.Button(self.search_frame_by_request, text="Search", command=self.search_by_request)
+        
+        # create cancel button
+        self.cancel_button = tk.Button(self.search_frame_by_request, text="Cancel", command=self.search_window.destroy)
+        self.cancel_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        
+    
+    def show_all_books(self):
+        __doc__ = """
+        This function is called by the show_all_books_button.
+        Function creates a listbox with scrollbar to show all books in the base by title.
+        """
+        
+        # create listbox wiget for all books in the database
+        self.listbox_all_books = tk.Listbox(self.search_frame_all_books)
+        self.listbox_all_books.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+    
+        # create Scrollbar widget for listbox_all_books
+        self.listbox_all_books_scroll = tk.Scrollbar(self.listbox_all_books)
+        self.listbox_all_books_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+        self.listbox_all_books.config(yscrollcommand=self.listbox_all_books_scroll.set)
+        self.listbox_all_books_scroll.config(command=self.listbox_all_books.yview)
+        
+        try:
+            book_details = books.cursor.execute("""SELECT title FROM books""")
+            books_list = [n[0] for n in book_details.fetchall()]
+            for book in books_list:
+                self.listbox_all_books.insert(tk.END, book)
+                
+        except sqlite3.Error as err:
+            print(err, "Database error")
+            
+        # create open book button
+        self.open_book_button = tk.Button(self.search_frame_all_books, text="Show Book", command=self.open_this_book_details)
+        self.open_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        
+        # create close button
+        self.close_book_button = tk.Button(self.search_frame_all_books, text="Close", 
+                                        command=self.close_this_book)
+        self.close_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        
+        self.search_button_books.config(state=tk.DISABLED)
+    
+    # create self.open_this_book_details function
+    def open_this_book_details(self):
+        __doc__ = """
+        This function is used to open information about selected book from the table "books"
+        """
+        listbox_book_index = self.listbox_all_books.curselection()[0]
+        selected_book = self.listbox_all_books.get(listbox_book_index)
+        try:
+            books.cursor.execute("SELECT * FROM books WHERE title =?", (selected_book,))
+            book_details = books.cursor.fetchall()
+            
+            self.display_book_details (title = book_details[0][1], description = book_details[0][3],
+                                    publisher = book_details[0][4], link = book_details[0][5])
+        except sqlite3.Error as err:
+            print(err, "Database error")
+            messagebox.showerror("Error", "Database error")
+        
+    def display_book_details(self, title, link, publisher, description):
+        __doc__ = """
+        This function is used to display information about selected book from the table "books"
+        """
+        self.book_details_window = tk.Toplevel(self.main_window)
+        self.book_details_window.title("Book Details")
+        self.book_details_window.geometry("300x500")
+        self.book_details_window.resizable(False, False)
+        self.book_details_window.transient(self.main_window)
+        self.book_details_window.grab_set()
+        
+        self.book_details_frame = tk.Frame(self.book_details_window, borderwidth=1, border=1, relief="ridge")
+        self.book_details_frame.pack(fill=tk.BOTH, expand=True)
+                        
+        # create text widget inside book_details_frame
+        self.book_text_info = tk.Text(self.book_details_frame, wrap="word")
+        self.book_text_info.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
+        
+        book_details_dict = {"Title": title, "Link": link, "Publisher": publisher, "Description": description}
+                
+        for key, value in book_details_dict.items():
+            self.book_text_info.insert(tk.END, key + ": " + value + "\n")
+        
+        # create close button
+        self.close_book_button = tk.Button(self.book_details_window, text="Close", 
+                                        command=self.book_details_window.destroy)
+        self.close_book_button.pack(side=tk.BOTTOM, fill=tk.BOTH)
+        
+        #self.search_button_books.config(state=tk.DISABLED)
+
+
+    # create self.close_this_book function
+    def close_this_book(self):
+        __doc__ = """
+        This function is used to close selected book from the e-library.db.
+        """
+        self.listbox_all_books.delete(self.listbox_all_books.curselection()[0])
+        
+    
+    
     # create self.book_shelf function
     def book_shelf(self):
         messagebox.showinfo("Book's Shelf", "Book's shelf")
