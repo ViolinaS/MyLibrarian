@@ -18,44 +18,65 @@ class MyLibrarian:
         self.main_window.resizable(False, False)
         
         # creation of the main_window frame
-        self.main_frame = tk.Frame(self.main_window, borderwidth=1, relief="ridge")
+        self.main_frame = tk.Frame(self.main_window, borderwidth=1, relief="ridge", background="dark slate gray")
         self.main_frame.pack(fill=tk.BOTH, expand=True)
         
         
         """Creation of the Menu buttons in the root window""" 
-        
+    
         # button to add new book
-        self.add_book_button = tk.Button(self.main_frame, text="Add New Book", command=self.add_book)
+        self.add_book_button = tk.Button(self.main_frame, text="Add New Book", command=self.add_book,
+                                        bg="blanched almond", activebackground="dark slate gray", 
+                                        cursor="hand2", activeforeground="blanched almond", 
+                                        highlightbackground="blanched almond")
         self.add_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button to remove books
-        self.delete_book_button = tk.Button(self.main_frame, text="Delete a Book", command=self.delete_book)
+        self.delete_book_button = tk.Button(self.main_frame, text="Delete a Book", command=self.delete_book,
+                                            bg="blanched almond", activebackground="dark slate gray",
+                                            cursor="hand2", activeforeground="blanched almond", 
+                                            highlightbackground="blanched almond")
         self.delete_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button to find books
-        self.find_book_button = tk.Button(self.main_frame, text="Find a Book", command=self.find_book)
+        self.find_book_button = tk.Button(self.main_frame, text="Find a Book", command=self.find_book,
+                                        bg="blanched almond", activebackground="dark slate gray",
+                                        cursor="hand2", activeforeground="blanched almond", 
+                                        highlightbackground="blanched almond")
         self.find_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button Book's Shelf
-        self.book_shelf_button = tk.Button(self.main_frame, text="Book's Shelf", command=self.book_shelf)
+        self.book_shelf_button = tk.Button(self.main_frame, text="Book's Shelf", command=self.book_shelf,
+                                        bg="blanched almond", activebackground="dark slate gray", 
+                                        cursor="hand2", activeforeground="blanched almond",
+                                        highlightbackground="blanched almond")
         self.book_shelf_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button Favorites
-        self.favorites_button = tk.Button(self.main_frame, text="Favorites", command=self.favorites)
+        self.favorites_button = tk.Button(self.main_frame, text="Favorites", command=self.favorites,
+                                        bg="blanched almond", activebackground="dark slate gray",
+                                        cursor="hand2", activeforeground="blanched almond",
+                                        highlightbackground="blanched almond")
         self.favorites_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button Help
-        self.help_button = tk.Button(self.main_frame, text="Help", command=self.help)
+        self.help_button = tk.Button(self.main_frame, text="Help", command=self.help,
+                                    bg="blanched almond", activebackground="dark slate gray", 
+                                    cursor="hand2", activeforeground="blanched almond",
+                                    highlightbackground="blanched almond")
         self.help_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button Exit
-        self.exit_button = tk.Button(self.main_frame, text="Exit", command=self.main_window.destroy)
+        self.exit_button = tk.Button(self.main_frame, text="Exit", command=self.main_window.destroy,
+                                    bg="blanched almond", activebackground="dark slate gray",
+                                    cursor="hand2", activeforeground="blanched almond",
+                                    highlightbackground="blanched almond")
         self.exit_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         """run main loop"""
         tk.mainloop()
         
-        # self.add_book function
+    # self.add_book function
     def add_book(self):
         __doc__= """
         This function is used to prepare to add a new book to the e-library.db
@@ -65,66 +86,86 @@ class MyLibrarian:
         # building new window
         self.new_book_window = tk.Toplevel(self.main_window)
         self.new_book_window.title("Add New Book")
-        self.new_book_window.geometry("300x500")
+        self.new_book_window.geometry("300x600")
         self.new_book_window.resizable(False, False)
         self.new_book_window.transient(self.main_window)
         self.new_book_window.grab_set()
         
         # building new window frame
-        self.new_book_frame = tk.Frame(self.new_book_window, borderwidth=1, relief="ridge")
+        self.new_book_frame = tk.Frame(self.new_book_window, borderwidth=1, relief="ridge", bg="dark slate gray")
         self.new_book_frame.pack(fill=tk.BOTH, expand=True)
         
         # Book's Title entry with its label
-        self.title_lable = tk.Label(self.new_book_frame, text="Book's title: ")
-        self.title_entry = tk.Entry(self.new_book_frame)
+        self.title_lable = tk.Label(self.new_book_frame, text="Book's title: ", 
+                                    bg="dark slate gray", foreground="blanched almond")
+        self.title_entry = tk.Entry(self.new_book_frame, bg="slate gray",
+                                    highlightbackground="blanched almond")
         self.title_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         self.title_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # Book's Author entry with its label
-        self.author_lable = tk.Label(self.new_book_frame, text="Author's name: ")
-        self.author_entry = tk.Entry(self.new_book_frame)
+        self.author_lable = tk.Label(self.new_book_frame, text="Author's name: ",
+                                    bg="dark slate gray", foreground="blanched almond")
+        self.author_entry = tk.Entry(self.new_book_frame, bg="slate gray",
+                                    highlightbackground="blanched almond")
         self.author_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         self.author_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # Book's Genre entry with its label
-        self.genre_lable = tk.Label(self.new_book_frame, text="Genre: ")
-        self.genre_entry = tk.Entry(self.new_book_frame)
+        self.genre_lable = tk.Label(self.new_book_frame, text="Genre: ",
+                                    bg="dark slate gray", foreground="blanched almond")
+        self.genre_entry = tk.Entry(self.new_book_frame, bg="slate gray",
+                                    highlightbackground="blanched almond")
         self.genre_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         self.genre_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # Book's Release year entry with its label
-        self.release_year_lable = tk.Label(self.new_book_frame, text="Release year: ")
-        self.release_year_entry = tk.Entry(self.new_book_frame)
+        self.release_year_lable = tk.Label(self.new_book_frame, text="Release year: ",
+                                        bg="dark slate gray", foreground="blanched almond")
+        self.release_year_entry = tk.Entry(self.new_book_frame, bg="slate gray",
+                                        highlightbackground="blanched almond")
         self.release_year_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         self.release_year_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # Book's Description entry for Text with its label
-        self.description_lable = tk.Label(self.new_book_frame, text="Description: ")
-        self.description_entry = tk.Text(self.new_book_frame, width=500, height=5)
+        self.description_lable = tk.Label(self.new_book_frame, text="Description: ",
+                                        bg="dark slate gray", foreground="blanched almond",
+                                        highlightbackground="blanched almond")
+        self.description_entry = tk.Text(self.new_book_frame, width=500, height=5, bg="slate gray")
         self.description_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         self.description_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # Book's Publisher entry with its label
-        self.publisher_lable = tk.Label(self.new_book_frame, text="Publisher: ")
-        self.publisher_entry = tk.Entry(self.new_book_frame)
+        self.publisher_lable = tk.Label(self.new_book_frame, text="Publisher: ",
+                                        bg="dark slate gray", foreground="blanched almond")
+        self.publisher_entry = tk.Entry(self.new_book_frame, bg="slate gray",
+                                        highlightbackground="blanched almond")
         self.publisher_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         self.publisher_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # Book's filepath on the file system
-        self.filepath_lable = tk.Label(self.new_book_frame, text="Filepath to your book: ")
+        self.filepath_lable = tk.Label(self.new_book_frame, text="Filepath to your book: ",
+                                    bg="dark slate gray", foreground="blanched almond")
         self.filepath_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         self.filepath_entry = filedialog.askopenfilename()
-        self.filepath_entry_text = tk.Entry(self.new_book_frame)
+        self.filepath_entry_text = tk.Entry(self.new_book_frame, bg="slate gray",
+                                            highlightbackground="blanched almond")
         self.filepath_entry_text.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         self.filepath_entry_text.insert(tk.END, (self.filepath_entry))
         
         
         # create ok button
-        self.ok_button = tk.Button(self.new_book_frame, text="OK", command=self.save_book_to_db)
+        self.ok_button = tk.Button(self.new_book_frame, text="OK", bg="blanched almond",
+                                activebackground="dark slate gray", command=self.save_book_to_db,
+                                cursor="hand2", activeforeground="blanched almond",
+                                highlightbackground="blanched almond")
         self.ok_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # create cancel button
-        self.cancel_button = tk.Button(self.new_book_frame, text="Cancel", command=self.new_book_window.destroy)
+        self.cancel_button = tk.Button(self.new_book_frame, text="Cancel", bg="coral", 
+                                    activebackground="dark slate gray", cursor="hand2", 
+                                    command=self.new_book_window.destroy, activeforeground="blanched almond",
+                                    highlightbackground="blanched almond")
         self.cancel_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
 
             
@@ -188,12 +229,15 @@ class MyLibrarian:
         self.delete_window.grab_set()
         
         # building new window frame
-        self.delete_frame = tk.Frame(self.delete_window, borderwidth=1, relief="ridge")
+        self.delete_frame = tk.Frame(self.delete_window, borderwidth=1, relief="ridge", bg="dark slate gray")
         self.delete_frame.pack(fill=tk.BOTH, expand=True)
         
         # create listbox wiget for all books in the database
-        self.listbox = tk.Listbox(self.delete_frame)
-        self.listbox.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.listbox = tk.Listbox(self.delete_frame, bg="dark slate gray",
+                                foreground="blanched almond", selectmode=tk.MULTIPLE,
+                                selectbackground="coral", selectforeground="black",
+                                cursor="hand2", activestyle="none")
+        self.listbox.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=10, pady=5)
         
         # insert all books in the listbox from the database, table books
         choose_book = books.cursor.execute("""SELECT title FROM books""")
@@ -202,11 +246,15 @@ class MyLibrarian:
             self.listbox.insert(tk.END, book[0])
         
         # create delete button
-        self.delete_button = tk.Button(self.delete_frame, text="Delete", command=self.delete_this_book)
+        self.delete_button = tk.Button(self.delete_frame, text="Delete", bg="blanched almond",
+                                    activebackground="dark slate gray", activeforeground="blanched almond",
+                                    cursor="hand2", command=self.delete_this_book)
         self.delete_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # create cancel button
-        self.cancel_button = tk.Button(self.delete_frame, text="Cancel", command=self.delete_window.destroy)
+        self.cancel_button = tk.Button(self.delete_frame, text="Cancel", bg="coral",
+                                    activebackground="dark slate gray", activeforeground="blanched almond",
+                                    command=self.delete_window.destroy, cursor="hand2")
         self.cancel_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
     
@@ -234,7 +282,7 @@ class MyLibrarian:
         This function is called by the find_book_button.      
         """
         # building new window
-        self.search_window = tk.Toplevel(self.main_window)
+        self.search_window = tk.Toplevel(self.main_window, bg="dark slate gray")
         self.search_window.title("Let's find a book")
         self.search_window.geometry("300x500")
         self.search_window.resizable(False, False)
@@ -242,37 +290,22 @@ class MyLibrarian:
         self.search_window.grab_set()
         
         # building new window frames
-        self.search_frame_all_books = tk.Frame(self.search_window, borderwidth=1, relief="ridge")
+        self.search_frame_all_books = tk.Frame(self.search_window, borderwidth=1, relief="ridge", bg="dark slate gray")
         self.search_frame_all_books.pack(fill=tk.BOTH, expand=True)
-        self.search_frame_all_authors = tk.Frame(self.search_window, borderwidth=1, relief="ridge")
-        self.search_frame_all_authors.pack(fill=tk.BOTH, expand=True)
-        self.search_frame_by_request = tk.Frame(self.search_window, borderwidth=1, relief="ridge")
-        self.search_frame_by_request.pack(fill=tk.BOTH, expand=True)
         
         # create show button --> all books
-        self.search_button_books = tk.Button(self.search_frame_all_books, text="Show all Books", 
-                                    command=self.show_all_books)
+        self.search_button_books = tk.Button(self.search_frame_all_books, text="Show all Books", cursor="hand2", 
+                                            command=self.show_all_books, bg="blanched almond",
+                                            activebackground="dark slate gray", activeforeground="blanched almond")
         self.search_button_books.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
-        # create show button --> all authors
-        self.search_button_authors = tk.Button(self.search_frame_all_authors, text="Show all Authors", command=self.show_all_authors)
-        self.search_button_authors.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
-        
-        # create label for search by request
-        self.search_by_request_label = tk.Label(self.search_frame_by_request, 
-                                                text="Search by request:\n Input Book's title or Author's name, genre or publisher: ")
-        self.search_by_request_label.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
-        
-        # create search by request entry
-        self.search_by_request_entry = tk.Entry(self.search_frame_by_request, width=30)
-        self.search_by_request_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
-        
-        # create search button --> by request
-        self.search_button = tk.Button(self.search_frame_by_request, text="Search", command=self.search_by_request)
         
         # create cancel button
-        self.cancel_button = tk.Button(self.search_frame_by_request, text="Cancel", command=self.search_window.destroy)
-        self.cancel_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        self.cancel_button = tk.Button(self.search_window, text="Cancel", width=10 , 
+                                    background="coral", activebackground="dark slate gray", 
+                                    cursor="hand2", command=self.search_window.destroy,
+                                    activeforeground="blanched almond", highlightbackground="blanched almond")
+        self.cancel_button.pack(side=tk.RIGHT, fill=tk.X, padx=10, pady=5, expand=True)
         
     
     def show_all_books(self):
@@ -282,11 +315,15 @@ class MyLibrarian:
         """
         
         # create listbox wiget for all books in the database
-        self.listbox_all_books = tk.Listbox(self.search_frame_all_books)
-        self.listbox_all_books.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.listbox_all_books = tk.Listbox(self.search_frame_all_books, bg="dark slate gray",
+                                            foreground="blanched almond", selectmode=tk.SINGLE,
+                                            selectbackground="coral", selectforeground="black",
+                                            cursor="hand2", activestyle="none")
+        self.listbox_all_books.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=10, pady=5)
     
         # create Scrollbar widget for listbox_all_books
-        self.listbox_all_books_scroll = tk.Scrollbar(self.listbox_all_books)
+        self.listbox_all_books_scroll = tk.Scrollbar(self.listbox_all_books, width=14,
+                                                    bg="blanched almond", activebackground="coral")
         self.listbox_all_books_scroll.pack(side=tk.RIGHT, fill=tk.Y)
         self.listbox_all_books.config(yscrollcommand=self.listbox_all_books_scroll.set)
         self.listbox_all_books_scroll.config(command=self.listbox_all_books.yview)
@@ -301,13 +338,11 @@ class MyLibrarian:
             print(err, "Database error")
             
         # create open book button
-        self.open_book_button = tk.Button(self.search_frame_all_books, text="Show Book", command=self.open_this_book_details)
-        self.open_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
-        
-        # create close button for all books listbox
-        self.close_book_button = tk.Button(self.search_frame_all_books, text="Close", 
-                                        command=self.close_show_all_books)
-        self.close_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        self.open_book_button = tk.Button(self.search_window, text="Show Book", width=10, 
+                                        command=self.open_this_book_details, bg="blanched almond",
+                                        cursor="hand2", activebackground="dark slate gray",
+                                        activeforeground="blanched almond", highlightbackground="blanched almond",)
+        self.open_book_button.pack(side=tk.LEFT, fill=tk.X, padx=10, pady=5, expand=True)
         
         self.search_button_books.config(state=tk.DISABLED)
     
@@ -324,7 +359,7 @@ class MyLibrarian:
                     
         except sqlite3.Error as err:
             print(err, "Database error")
-            messagebox.showerror("Error", "Database error")
+            messagebox.showerror("Error", err)
             
         try:
             authors.cursor.execute("""SELECT name FROM authors WHERE id =?""", (book_details[0][6],))
@@ -334,7 +369,7 @@ class MyLibrarian:
             
         except sqlite3.Error as err:
             print(err, "Database error")
-            messagebox.showerror("Error", "Database error")
+            messagebox.showerror("Error", err)
             
         try:
             genres.cursor.execute("""SELECT name FROM genres WHERE id =?""", (book_details[0][7],))
@@ -344,7 +379,7 @@ class MyLibrarian:
             
         except sqlite3.Error as err:
             print(err, "Database error")
-            messagebox.showerror("Error", "Database error")
+            messagebox.showerror("Error", err)
             
         self.display_book_details (title = book_details[0][1], description = book_details[0][3],
                         publisher = book_details[0][4], link = book_details[0][5], year=book_details[0][2], 
@@ -355,18 +390,18 @@ class MyLibrarian:
         __doc__ = """
         This method is used to display information about selected book from the table "books"
         """
-        self.book_details_window = tk.Toplevel(self.main_window)
+        self.book_details_window = tk.Toplevel(self.main_window, bg="dark slate gray")
         self.book_details_window.title("Book Details")
         self.book_details_window.geometry("300x500")
         self.book_details_window.resizable(False, False)
         self.book_details_window.transient(self.main_window)
         self.book_details_window.grab_set()
         
-        self.book_details_frame = tk.Frame(self.book_details_window, borderwidth=1, border=1, relief="ridge")
-        self.book_details_frame.pack(fill=tk.BOTH, expand=True)
+        self.book_details_frame = tk.Frame(self.book_details_window, relief="ridge", bg="dark slate gray")
+        self.book_details_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
                         
         # create text widget inside book_details_frame
-        self.book_text_info = tk.Text(self.book_details_frame, wrap="word")
+        self.book_text_info = tk.Text(self.book_details_frame, wrap="word", bg="dark slate gray", fg="blanched almond")
         self.book_text_info.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
         
         book_details_dict = {"Title": title, "Link": link, "Publisher": publisher, 
@@ -376,23 +411,25 @@ class MyLibrarian:
             self.book_text_info.insert(tk.END, f"{key}: {value}\n")
         
         # create close button
-        self.close_book_button = tk.Button(self.book_details_window, text="Close", 
-                                        command=self.book_details_window.destroy)
-        self.close_book_button.pack(side=tk.BOTTOM, fill=tk.BOTH)
+        self.close_book_button = tk.Button(self.book_details_window, text="Close Book Details", 
+                                        command=self.book_details_window.destroy,
+                                        cursor="hand2", activebackground="coral", bg="blanched almond",
+                                        highlightbackground="dark slate gray")
+        self.close_book_button.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=10, pady=5)
         
         
 
 
     # create self.close_this_book function
-    def close_show_all_books(self):
-        __doc__ = """
-        This function is called by self.close_book_button to close listbox with books, buttons of show_all_books()
-        and return to previous state.
-        """
-        self.listbox_all_books.destroy()
-        self.search_button_books.config(state=tk.NORMAL)
-        self.open_book_button.destroy()
-        self.close_book_button.destroy()
+    # def close_show_all_books(self):
+        # __doc__ = """
+        # This function is called by self.close_book_button to close listbox with books, buttons of show_all_books()
+        # and return to previous state.
+        # """
+        # self.listbox_all_books.destroy()
+        # self.search_button_books.config(state=tk.NORMAL)
+        # self.open_book_button.destroy()
+        # self.close_book_button.destroy()
     
     # create self.book_shelf function
     def book_shelf(self):
