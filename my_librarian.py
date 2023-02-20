@@ -304,9 +304,9 @@ class MyLibrarian:
         self.open_book_button = tk.Button(self.search_frame_all_books, text="Show Book", command=self.open_this_book_details)
         self.open_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
-        # create close button
+        # create close button for all books listbox
         self.close_book_button = tk.Button(self.search_frame_all_books, text="Close", 
-                                        command=self.close_this_book)
+                                        command=self.close_show_all_books)
         self.close_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         self.search_button_books.config(state=tk.DISABLED)
@@ -356,17 +356,18 @@ class MyLibrarian:
                                         command=self.book_details_window.destroy)
         self.close_book_button.pack(side=tk.BOTTOM, fill=tk.BOTH)
         
-        #self.search_button_books.config(state=tk.DISABLED)
+        
 
 
     # create self.close_this_book function
-    def close_this_book(self):
+    def close_show_all_books(self):
         __doc__ = """
-        This function is used to close selected book from the e-library.db.
+        This function is called by self.close_book_button to close listbox with books.
         """
-        self.listbox_all_books.delete(self.listbox_all_books.curselection()[0])
-        
-    
+        self.listbox_all_books.destroy()
+        self.search_button_books.config(state=tk.NORMAL)
+        self.open_book_button.destroy()
+        self.close_book_button.destroy()
     
     # create self.book_shelf function
     def book_shelf(self):
