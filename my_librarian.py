@@ -235,7 +235,7 @@ class MyLibrarian:
         """
         # building new window
         self.search_window = tk.Toplevel(self.main_window)
-        self.search_window.title("Choose book to delete")
+        self.search_window.title("Let's find a book")
         self.search_window.geometry("300x500")
         self.search_window.resizable(False, False)
         self.search_window.transient(self.main_window)
@@ -321,16 +321,39 @@ class MyLibrarian:
         try:
             books.cursor.execute("SELECT * FROM books WHERE title =?", (selected_book,))
             book_details = books.cursor.fetchall()
-            
-            self.display_book_details (title = book_details[0][1], description = book_details[0][3],
-                                    publisher = book_details[0][4], link = book_details[0][5])
+                    
         except sqlite3.Error as err:
             print(err, "Database error")
             messagebox.showerror("Error", "Database error")
+            
+        try:
+            authors.cursor.execute("""SELECT name FROM authors WHERE id =?""", (book_details[0][6],))
+            author_of_book = authors.cursor.fetchall()
+            author_name = author_of_book[0][0]
+            print(author_name)
+            
+        except sqlite3.Error as err:
+            print(err, "Database error")
+            messagebox.showerror("Error", "Database error")
+            
+        try:
+            genres.cursor.execute("""SELECT name FROM genres WHERE id =?""", (book_details[0][7],))
+            genre_of_book = genres.cursor.fetchall()
+            genre_name = genre_of_book[0][0]
+            print(genre_name)
+            
+        except sqlite3.Error as err:
+            print(err, "Database error")
+            messagebox.showerror("Error", "Database error")
+            
+        self.display_book_details (title = book_details[0][1], description = book_details[0][3],
+                        publisher = book_details[0][4], link = book_details[0][5], year=book_details[0][2], 
+                        author = author_name, genre = genre_name)
         
-    def display_book_details(self, title, link, publisher, description):
+        
+    def display_book_details(self, title, link, publisher, description, year, author, genre):
         __doc__ = """
-        This function is used to display information about selected book from the table "books"
+        This method is used to display information about selected book from the table "books"
         """
         self.book_details_window = tk.Toplevel(self.main_window)
         self.book_details_window.title("Book Details")
@@ -346,10 +369,11 @@ class MyLibrarian:
         self.book_text_info = tk.Text(self.book_details_frame, wrap="word")
         self.book_text_info.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
         
-        book_details_dict = {"Title": title, "Link": link, "Publisher": publisher, "Description": description}
+        book_details_dict = {"Title": title, "Link": link, "Publisher": publisher, 
+                            "Description": description, "Release year": year, "Author": author, "Genre": genre}
                 
         for key, value in book_details_dict.items():
-            self.book_text_info.insert(tk.END, key + ": " + value + "\n")
+            self.book_text_info.insert(tk.END, f"{key}: {value}\n")
         
         # create close button
         self.close_book_button = tk.Button(self.book_details_window, text="Close", 
@@ -362,7 +386,8 @@ class MyLibrarian:
     # create self.close_this_book function
     def close_show_all_books(self):
         __doc__ = """
-        This function is called by self.close_book_button to close listbox with books.
+        This function is called by self.close_book_button to close listbox with books, buttons of show_all_books()
+        and return to previous state.
         """
         self.listbox_all_books.destroy()
         self.search_button_books.config(state=tk.NORMAL)
@@ -371,19 +396,19 @@ class MyLibrarian:
     
     # create self.book_shelf function
     def book_shelf(self):
-        messagebox.showinfo("Book's Shelf", "Book's shelf")
+        pass
         
     # create self.favorites function
     def favorites(self):
-        messagebox.showinfo("Favorites", "Favorites")
+        pass
     
     # create self.help function
     def help(self):
-        messagebox.showinfo("Help", "Help")
+        pass
     
     # create self.exit function
     def exit(self):
-        messagebox.showinfo("Exit", "Exit")
+        pass
 
 
 
