@@ -136,11 +136,11 @@ class MyLibrarian:
         
         
         # create ok button
-        self.ok_button = PositiveButton(self.new_book_frame, command=self.save_book_to_db)
+        self.ok_button = PositiveButton(self.new_book_frame, text="Ok", command=self.save_book_to_db)
         self.ok_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # create cancel button
-        self.cancel_button = NegativeButton(self.new_book_frame, command=self.new_book_window.destroy)
+        self.cancel_button = NegativeButton(self.new_book_frame, text="Cancel", command=self.new_book_window.destroy)
         self.cancel_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
 
             
