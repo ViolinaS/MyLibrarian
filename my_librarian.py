@@ -260,35 +260,19 @@ class MyLibrarian:
         self.search_window.grab_set()
         
         # building new window frames
-        self.search_frame_all_books = tk.Frame(self.search_window, borderwidth=1, relief="ridge", bg="dark slate gray")
+        self.search_frame_all_books = tk.Frame(self.search_window, borderwidth=1,
+                                            relief="ridge", bg="dark slate gray")
         self.search_frame_all_books.pack(fill=tk.BOTH, expand=True)
-        
-        # create show button --> all books
-        self.search_button_books = PositiveButton(self.search_frame_all_books, text="Show all Books", command=self.show_all_books)
-        self.search_button_books.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
-        
-        
-        # create cancel button
-        self.cancel_button = NegativeButton(self.search_window, text="Cancel", command=self.search_window.destroy)
-        self.cancel_button.pack(side=tk.RIGHT, fill=tk.X, padx=10, pady=5, expand=True)
-        
-    
-    def show_all_books(self):
-        __doc__ = """
-        This function is called by the show_all_books_button.
-        Function creates a listbox with scrollbar to show all books in the base by title.
-        """
         
         # create listbox wiget for all books in the database
         self.listbox_all_books = tk.Listbox(self.search_frame_all_books, bg="dark slate gray",
-                                            foreground="blanched almond", selectmode=tk.SINGLE,
-                                            selectbackground="coral", selectforeground="black",
-                                            cursor="hand2", activestyle="none")
+                                    foreground="blanched almond", selectmode=tk.SINGLE,
+                                    selectbackground="coral", selectforeground="black",
+                                    cursor="hand2", activestyle="none")
         self.listbox_all_books.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=10, pady=5)
-    
         # create Scrollbar widget for listbox_all_books
         self.listbox_all_books_scroll = tk.Scrollbar(self.listbox_all_books, width=14,
-                                                    bg="blanched almond", activebackground="coral")
+                                            bg="blanched almond", activebackground="coral")
         self.listbox_all_books_scroll.pack(side=tk.RIGHT, fill=tk.Y)
         self.listbox_all_books.config(yscrollcommand=self.listbox_all_books_scroll.set)
         self.listbox_all_books_scroll.config(command=self.listbox_all_books.yview)
@@ -298,16 +282,19 @@ class MyLibrarian:
             books_list = [n[0] for n in book_details.fetchall()]
             for book in books_list:
                 self.listbox_all_books.insert(tk.END, book)
-                
+        
         except sqlite3.Error as err:
             print(err, "Database error")
-            
+    
         # create open book button
         self.open_book_button = PositiveButton(self.search_window, text="Show Book", command=self.open_this_book_details)
-        self.open_book_button.pack(side=tk.LEFT, fill=tk.X, padx=10, pady=5, expand=True)
+        self.open_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
-        # disable button Show all books to avoid double click
-        self.search_button_books.config(state=tk.DISABLED)
+        
+        # create cancel button
+        self.cancel_button = NegativeButton(self.search_window, text="Cancel", command=self.search_window.destroy)
+        self.cancel_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+    
     
     # create self.open_this_book_details function
     def open_this_book_details(self):
@@ -380,17 +367,6 @@ class MyLibrarian:
         
 
 
-    # create self.close_this_book function
-    # def close_show_all_books(self):
-        # __doc__ = """
-        # This function is called by self.close_book_button to close listbox with books, buttons of show_all_books()
-        # and return to previous state.
-        # """
-        # self.listbox_all_books.destroy()
-        # self.search_button_books.config(state=tk.NORMAL)
-        # self.open_book_button.destroy()
-        # self.close_book_button.destroy()
-    
     # create self.book_shelf function
     def book_shelf(self):
         pass
