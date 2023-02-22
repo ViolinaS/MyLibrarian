@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, Event, messagebox
 from tkinter.scrolledtext import ScrolledText
 import sqlite3
+from buttons import NegativeButton, PositiveButton
 
 
 class MyLibrarian:
@@ -25,52 +26,32 @@ class MyLibrarian:
         """Creation of the Menu buttons in the root window""" 
     
         # button to add new book
-        self.add_book_button = tk.Button(self.main_frame, text="Add New Book", command=self.add_book,
-                                        bg="blanched almond", activebackground="dark slate gray", 
-                                        cursor="hand2", activeforeground="blanched almond", 
-                                        highlightbackground="blanched almond")
+        self.add_book_button = PositiveButton(self.main_frame, text="Add New Book", command=self.add_book)
         self.add_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button to remove books
-        self.delete_book_button = tk.Button(self.main_frame, text="Delete a Book", command=self.delete_book,
-                                            bg="blanched almond", activebackground="dark slate gray",
-                                            cursor="hand2", activeforeground="blanched almond", 
-                                            highlightbackground="blanched almond")
+        self.delete_book_button = PositiveButton(self.main_frame, text="Delete Books", command=self.delete_book)
         self.delete_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button to find books
-        self.find_book_button = tk.Button(self.main_frame, text="Find a Book", command=self.find_book,
-                                        bg="blanched almond", activebackground="dark slate gray",
-                                        cursor="hand2", activeforeground="blanched almond", 
-                                        highlightbackground="blanched almond")
+        self.find_book_button = PositiveButton(self.main_frame, text="Find a Book", command=self.find_book)
         self.find_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button Book's Shelf
-        self.book_shelf_button = tk.Button(self.main_frame, text="Book's Shelf", command=self.book_shelf,
-                                        bg="blanched almond", activebackground="dark slate gray", 
-                                        cursor="hand2", activeforeground="blanched almond",
-                                        highlightbackground="blanched almond")
+        self.book_shelf_button = PositiveButton(self.main_frame, text="Book's Shelf", command=self.book_shelf)
         self.book_shelf_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button Favorites
-        self.favorites_button = tk.Button(self.main_frame, text="Favorites", command=self.favorites,
-                                        bg="blanched almond", activebackground="dark slate gray",
-                                        cursor="hand2", activeforeground="blanched almond",
-                                        highlightbackground="blanched almond")
+        self.favorites_button = PositiveButton(self.main_frame, text="Favorites", command=self.favorites)
         self.favorites_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
+        
         # button Help
-        self.help_button = tk.Button(self.main_frame, text="Help", command=self.help,
-                                    bg="blanched almond", activebackground="dark slate gray", 
-                                    cursor="hand2", activeforeground="blanched almond",
-                                    highlightbackground="blanched almond")
+        self.help_button = PositiveButton(self.main_frame, text="Help", command=self.help)
         self.help_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button Exit
-        self.exit_button = tk.Button(self.main_frame, text="Exit", command=self.main_window.destroy,
-                                    bg="blanched almond", activebackground="dark slate gray",
-                                    cursor="hand2", activeforeground="blanched almond",
-                                    highlightbackground="blanched almond")
+        self.exit_button = PositiveButton(self.main_frame, text="Exit", command=self.main_window.destroy)
         self.exit_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         """run main loop"""
@@ -155,17 +136,11 @@ class MyLibrarian:
         
         
         # create ok button
-        self.ok_button = tk.Button(self.new_book_frame, text="OK", bg="blanched almond",
-                                activebackground="dark slate gray", command=self.save_book_to_db,
-                                cursor="hand2", activeforeground="blanched almond",
-                                highlightbackground="blanched almond")
+        self.ok_button = PositiveButton(self.new_book_frame, command=self.save_book_to_db)
         self.ok_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # create cancel button
-        self.cancel_button = tk.Button(self.new_book_frame, text="Cancel", bg="coral", 
-                                    activebackground="dark slate gray", cursor="hand2", 
-                                    command=self.new_book_window.destroy, activeforeground="blanched almond",
-                                    highlightbackground="blanched almond")
+        self.cancel_button = NegativeButton(self.new_book_frame, command=self.new_book_window.destroy)
         self.cancel_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
 
             
@@ -246,15 +221,11 @@ class MyLibrarian:
             self.listbox.insert(tk.END, book[0])
         
         # create delete button
-        self.delete_button = tk.Button(self.delete_frame, text="Delete", bg="blanched almond",
-                                    activebackground="dark slate gray", activeforeground="blanched almond",
-                                    cursor="hand2", command=self.delete_this_book)
+        self.delete_button = PositiveButton(self.delete_frame, text="Delete", command=self.delete_this_book)
         self.delete_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # create cancel button
-        self.cancel_button = tk.Button(self.delete_frame, text="Cancel", bg="coral",
-                                    activebackground="dark slate gray", activeforeground="blanched almond",
-                                    command=self.delete_window.destroy, cursor="hand2")
+        self.cancel_button = NegativeButton(self.delete_frame, text="Cancel", command=self.delete_window.destroy)
         self.cancel_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
     
@@ -276,7 +247,6 @@ class MyLibrarian:
 
     # create self.find_book function
     def find_book(self):
-        # create document
         __doc__ = """
         This function is used to search books and authors from database. 
         This function is called by the find_book_button.      
@@ -294,17 +264,12 @@ class MyLibrarian:
         self.search_frame_all_books.pack(fill=tk.BOTH, expand=True)
         
         # create show button --> all books
-        self.search_button_books = tk.Button(self.search_frame_all_books, text="Show all Books", cursor="hand2", 
-                                            command=self.show_all_books, bg="blanched almond",
-                                            activebackground="dark slate gray", activeforeground="blanched almond")
+        self.search_button_books = PositiveButton(self.search_frame_all_books, text="Show all Books", command=self.show_all_books)
         self.search_button_books.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         
         # create cancel button
-        self.cancel_button = tk.Button(self.search_window, text="Cancel", width=10 , 
-                                    background="coral", activebackground="dark slate gray", 
-                                    cursor="hand2", command=self.search_window.destroy,
-                                    activeforeground="blanched almond", highlightbackground="blanched almond")
+        self.cancel_button = NegativeButton(self.search_window, text="Cancel", command=self.search_window.destroy)
         self.cancel_button.pack(side=tk.RIGHT, fill=tk.X, padx=10, pady=5, expand=True)
         
     
@@ -338,12 +303,10 @@ class MyLibrarian:
             print(err, "Database error")
             
         # create open book button
-        self.open_book_button = tk.Button(self.search_window, text="Show Book", width=10, 
-                                        command=self.open_this_book_details, bg="blanched almond",
-                                        cursor="hand2", activebackground="dark slate gray",
-                                        activeforeground="blanched almond", highlightbackground="blanched almond",)
+        self.open_book_button = PositiveButton(self.search_window, text="Show Book", command=self.open_this_book_details)
         self.open_book_button.pack(side=tk.LEFT, fill=tk.X, padx=10, pady=5, expand=True)
         
+        # disable button Show all books to avoid double click
         self.search_button_books.config(state=tk.DISABLED)
     
     # create self.open_this_book_details function
@@ -411,10 +374,7 @@ class MyLibrarian:
             self.book_text_info.insert(tk.END, f"{key}: {value}\n")
         
         # create close button
-        self.close_book_button = tk.Button(self.book_details_window, text="Close Book Details", 
-                                        command=self.book_details_window.destroy,
-                                        cursor="hand2", activebackground="coral", bg="blanched almond",
-                                        highlightbackground="dark slate gray")
+        self.close_book_button = NegativeButton(self.book_details_window, text="Close Book Details", command=self.book_details_window.destroy)
         self.close_book_button.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=10, pady=5)
         
         
