@@ -435,28 +435,27 @@ class MyLibrarian:
         self.cancel_favorites_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
 
-    # def add_favorites(self):
-        # __doc__ = """
-        # """
-        # fave_book_index = self.listbox_all_books.curselection()[0]
-        # fave_book = self.listbox_all_books.get(fave_book_index)
-        
-        # try:
-            # books.cursor.execute("""SELECT id FROM books WHERE title=?""", (fave_book,))
-            # book_id = books.cursor.fetchone()[0]
-            # print(book_id)
-            # favorite.cursor.execute("""INSERT INTO favorite_shelf (book_id) VALUES (?);""", (book_id,))
-            # favorite.conn.commit()
-        
-        # except sqlite3.Error as err:
-            # print(err, "Database error")
-            # messagebox.showerror("Error", err)
-    
-    
     # create self.delete_favorites function
     def delete_favorites(self):
         __doc__ = """
         """
+        fave_book_index = self.favorites_list.curselection()[0]
+        fave_book = self.favorites_list.get(fave_book_index)
+        
+        try:
+            favorite.cursor.execute("""DELETE FROM favorite_shelf
+                WHERE book_id in (SELECT id FROM books WHERE title=?);""", (fave_book,))
+                
+                                    
+            favorite.conn.commit()
+
+        except sqlite3.Error as err:
+            print(err, "Database error")
+            messagebox.showerror("Error", err)
+        
+        self.favorites_list.delete(fave_book_index)
+
+    
         
     # create self.cancel_favorites function
     def cancel_favorites(self):
