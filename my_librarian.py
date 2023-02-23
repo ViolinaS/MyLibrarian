@@ -1,7 +1,6 @@
 from ebook_sql_db import books, authors, genres, favorite
 import tkinter as tk
 from tkinter import ttk, filedialog, Event, messagebox
-from tkinter.scrolledtext import ScrolledText
 import sqlite3
 from buttons import NegativeButton, PositiveButton
 
@@ -42,7 +41,7 @@ class MyLibrarian:
         self.favorites_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button Help
-        self.help_button = PositiveButton(self.main_frame, text="Help", command=self.help)
+        self.help_button = PositiveButton(self.main_frame, text="Help", command=self.help_menu)
         self.help_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button Exit
@@ -134,8 +133,8 @@ class MyLibrarian:
         self.ok_button = PositiveButton(self.new_book_frame, text="Ok", command=self.save_book_to_db)
         self.ok_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
-        # create cancel button
-        self.cancel_button = NegativeButton(self.new_book_frame, text="Cancel", command=self.new_book_window.destroy)
+        # create exit button
+        self.cancel_button = NegativeButton(self.new_book_frame, text="QUIT", command=self.new_book_window.destroy)
         self.cancel_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
 
             
@@ -143,7 +142,7 @@ class MyLibrarian:
         __doc__ = """
         This function is used to write and confirm a new book to the e-library.db
         """
-        
+        sqlite3.connect("e-library.db")
         try:
             authors.cursor.execute("INSERT INTO authors (name) VALUES (?)", (self.author_entry.get(),))
             authors.conn.commit()
@@ -158,21 +157,22 @@ class MyLibrarian:
             print(err, "Database error")
             messagebox.showerror("Error", "Genre is not added")
             
-        try:            
+        try:
             author = authors.cursor.execute("""SELECT id FROM authors WHERE name =?""", (self.author_entry.get(),)) 
             author_id = author.fetchone()[0]
-            print(author_id)
+            
             genre = genres.cursor.execute("""SELECT id FROM genres WHERE name =?""", (self.genre_entry.get(),))
             genre_id = genre.fetchone()[0]
-            print(genre_id)
             
-            books.cursor.execute("INSERT INTO books (title, year, description, publisher, link, author_id, genre_id)\
-            VALUES (?, ?, ?, ?, ?, ?, ?)",
+            books.cursor.execute("""
+                                INSERT INTO books 
+                                (title, year, description, publisher, link, author_id, genre_id)
+                                VALUES (?, ?, ?, ?, ?, ?, ?)""",
                                     (self.title_entry.get(), self.release_year_entry.get(), 
                                     self.description_entry.get("1.0", tk.END), self.publisher_entry.get(), 
                                     self.filepath_entry_text.get(), (author_id), (genre_id),))
             books.conn.commit()
-            messagebox.showinfo("Saved book", "Book saved successfully")
+            
         except sqlite3.Error as err:
             print(err, "Database error")
             messagebox.showerror("Error", "Book is not added")
@@ -219,8 +219,8 @@ class MyLibrarian:
         self.delete_button = PositiveButton(self.delete_frame, text="Delete", command=self.delete_this_book)
         self.delete_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
-        # create cancel button
-        self.cancel_button = NegativeButton(self.delete_frame, text="Cancel", command=self.delete_window.destroy)
+        # create exit button
+        self.cancel_button = NegativeButton(self.delete_frame, text="QUIT", command=self.delete_window.destroy)
         self.cancel_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
     
@@ -231,7 +231,7 @@ class MyLibrarian:
         try:
             books.cursor.execute("DELETE FROM books WHERE title =?", (self.listbox.get(self.listbox.curselection()[0]),))
             books.conn.commit()
-            messagebox.showinfo("Deleted book", "Book deleted successfully")
+            
         except sqlite3.Error as err:
             print(err, "Database error")
             messagebox.showerror("Error", "Book is not deleted")
@@ -289,8 +289,8 @@ class MyLibrarian:
                                             command=self.add_favorites)
         self.save_favorites_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
-        # create cancel button
-        self.cancel_button = NegativeButton(self.search_window, text="Cancel", command=self.search_window.destroy)
+        # create exit button
+        self.cancel_button = NegativeButton(self.search_window, text="QUIT", command=self.search_window.destroy)
         self.cancel_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
     
     
@@ -429,8 +429,13 @@ class MyLibrarian:
                                             command=self.delete_favorites)
         self.delete_favorites_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
-        # create cancel button
-        self.cancel_favorites_button = NegativeButton(self.favorites_window, text="Cancel",
+        # create open fave book button
+        self.open_fave_button = PositiveButton(self.favorites_window, text="Open",
+                                                    command=self.open_fave_book)
+        self.open_fave_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        
+        # create exit button
+        self.cancel_favorites_button = NegativeButton(self.favorites_window, text="QUIT",
                                                     command=self.favorites_window.destroy)
         self.cancel_favorites_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
@@ -446,7 +451,6 @@ class MyLibrarian:
             favorite.cursor.execute("""DELETE FROM favorite_shelf
                 WHERE book_id in (SELECT id FROM books WHERE title=?);""", (fave_book,))
                 
-                                    
             favorite.conn.commit()
 
         except sqlite3.Error as err:
@@ -455,14 +459,42 @@ class MyLibrarian:
         
         self.favorites_list.delete(fave_book_index)
 
-    
+    # create self.open_fave_book function
+    def open_fave_book(self):
+        __doc__ = """
+        """
+        fave_book_index = self.favorites_list.curselection()[0]
+        fave_book = self.favorites_list.get(fave_book_index)
+                
+        fave_book_details = sqlite3.connect("e-library.db")
+        fave_book_details.row_factory = sqlite3.Row
         
-    # create self.cancel_favorites function
-    def cancel_favorites(self):
-        pass
-
+        book_link = fave_book_details.execute("SELECT link FROM books WHERE title=?", 
+                                            (fave_book,)).fetchone()[0]
+        book_publisher = fave_book_details.execute("SELECT publisher FROM books WHERE title=?", 
+                                                (fave_book,)).fetchone()[0]
+        book_description = fave_book_details.execute("SELECT description FROM books WHERE title=?",
+                                                    (fave_book,)).fetchone()[0]
+        book_year = fave_book_details.execute("SELECT year FROM books WHERE title=?",
+                                            (fave_book,)).fetchone()[0]
+        book_author_id = fave_book_details.execute("SELECT author_id FROM books WHERE title=?", 
+                                                (fave_book,)).fetchone()[0]
+        book_genre_id = fave_book_details.execute("SELECT genre_id FROM books WHERE title=?", 
+                                                (fave_book,)).fetchone()[0]
+        book_author = fave_book_details.execute("SELECT name FROM authors WHERE id=?", 
+                                                (book_author_id,)).fetchone()[0]
+        book_genre = fave_book_details.execute("SELECT name FROM genres WHERE id=?",
+                                            (book_genre_id,)).fetchone()[0]
+        print(f"{book_link}, {book_publisher}, {book_description}, {book_year}, {book_author}, {book_genre}")
+                                                        
+        self.display_book_details(title = fave_book, link = book_link, publisher = book_publisher, 
+                                description = book_description, year = book_year, 
+                                author = book_author, genre = book_genre)
+        self.favorites_window.destroy()
+    
+    
     # create self.help function
-    def help(self):
+    def help_menu(self):
         pass
     
     
