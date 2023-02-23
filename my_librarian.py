@@ -352,6 +352,13 @@ class MyLibrarian:
         self.book_text_info = tk.Text(self.book_details_frame, wrap="word", bg="dark slate gray", fg="blanched almond")
         self.book_text_info.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
         
+        # create Scrollbar widget for book_text_info
+        self.book_text_info_scroll = tk.Scrollbar(self.book_text_info, width=14,
+                                            bg="blanched almond", activebackground="coral")
+        self.book_text_info_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+        self.book_text_info.config(yscrollcommand=self.book_text_info_scroll.set)
+        self.book_text_info_scroll.config(command=self.book_text_info.yview)
+                
         book_details_dict = {"Title": title, "Link": link, "Publisher": publisher, 
                             "Description": description, "Release year": year, "Author": author, "Genre": genre}
                 
@@ -360,7 +367,7 @@ class MyLibrarian:
         
         # create close button
         self.close_book_button = NegativeButton(self.book_details_window, text="Close Book Details", command=self.book_details_window.destroy)
-        self.close_book_button.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=10, pady=5)
+        self.close_book_button.pack(side=tk.BOTTOM, fill=tk.BOTH, padx=10, pady=5)
         
     def add_favorites(self):
         __doc__ = """
@@ -490,7 +497,7 @@ class MyLibrarian:
         self.display_book_details(title = fave_book, link = book_link, publisher = book_publisher, 
                                 description = book_description, year = book_year, 
                                 author = book_author, genre = book_genre)
-        self.favorites_window.destroy()
+        
     
     
     # create self.help function
