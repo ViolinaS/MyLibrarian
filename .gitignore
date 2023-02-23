@@ -2,6 +2,7 @@
 *.db
 e-library.db
 librarian.py
+*.xlsx
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
