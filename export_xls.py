@@ -1,58 +1,55 @@
 import xlsxwriter
-import os
-from ebook_sql_db import path
 import sqlite3
 
-def get_data_from_books():
+def sql_data_to_list_of_dicts(path_to_db, select_query):
+    """Returns data from an SQL query as a list of dicts."""
     try:
-        global conn, cursor
-        conn = sqlite3.connect(os.path.join(path, 'e-library.db'))
-        conn.row_factory = sqlite3.Row
-        cursor = conn.cursor()
-        data_books = cursor.execute("SELECT * FROM books")
-    except sqlite3.Error as e:
-        print(e)
-    
-    rows = data_books.fetchone()
-    books_data = {}
-    for row in rows.keys():
-        books_data[row] = rows[row]
+        con = sqlite3.connect(path_to_db)
+        con.row_factory = sqlite3.Row
+        data = con.execute(select_query).fetchall()
+        unpacked_data = [{k: item[k] for k in item.keys()} for item in data]
+        return unpacked_data
+    except Exception as e:
+        print(f"Failed to execute. Query: {select_query}\n with error:\n{e}")
+        return []
+    finally:
+        con.close()
         
-    return books_data
 
-def get_data_from_authors():
-    try:
-        data_authors = cursor.execute("SELECT * FROM authors")
-    except sqlite3.Error as e:
-        print(e)
-        
-    authors = data_authors.fetchone()
-    authors_data = {}
-    for author in authors.keys():
-        authors_data[author] = authors[author]
-    
-    return authors_data
+def get_books_data():
+    query = "SELECT * FROM books"
+    books_data = sql_data_to_list_of_dicts("e-library.db", query)
+    books_data_to_one_dict = {
+        "id":[item["id"] for item in books_data],
+        "title":[item["title"] + "\n" for item in books_data], 
+        "description":[item["description"] + "\n" for item in books_data], 
+        "year":[item["year"] for item in books_data],
+        "publisher":[item["publisher"] + "\n" for item in books_data],
+        "link":[item["link"] + "\n" for item in books_data]
+                        }
+    return books_data_to_one_dict
 
-def get_data_from_genres():
-    try:
-        data_genres = cursor.execute("SELECT * FROM genres")
-    except sqlite3.Error as e:
-        print(e)
-        
-    genres = data_genres.fetchone()
-    genres_data = {}
-    for genre in genres.keys():
-        genres_data[genre] = genres[genre]
-    
-    return genres_data
-    
-    
+def get_authors_data():
+    query = "SELECT * FROM authors"
+    authors_data = sql_data_to_list_of_dicts("e-library.db", query)
+    authors_names_to_dict = {"name":[item["name"] + "\n" for item in authors_data]}
+    return authors_names_to_dict
+
+
+def get_genres_data():
+    query = "SELECT * FROM genres"
+    genres_data = sql_data_to_list_of_dicts("e-library.db", query)
+    genres_names_to_dict = {"name":[item["name"] + "\n" for item in genres_data]}
+    return genres_names_to_dict
+
+
+
 def write_data_to_xlsx():
-    workbook = xlsxwriter.Workbook(os.path.join(path, 'library.xlsx'))
+    workbook = xlsxwriter.Workbook("library.xlsx")
     worksheet = workbook.add_worksheet("My Library")
-    data_of_books = get_data_from_books()
-    data_of_authors = get_data_from_authors()
-    data_of_genres = get_data_from_genres()
+    data_of_books = get_books_data()
+    data_of_authors = get_authors_data()
+    data_of_genres = get_genres_data()
     
     row = 0
     column = 0
@@ -66,19 +63,14 @@ def write_data_to_xlsx():
     worksheet.set_column("G:G", 20)
     worksheet.set_column("H:H", 50)
     
-    worksheet.write(row, column, data_of_books['id'])
-    worksheet.write(row, column + 1, data_of_books["title"])
-    worksheet.write(row, column + 2, data_of_authors["name"])
-    worksheet.write(row, column + 3, data_of_genres["name"])
-    worksheet.write(row, column + 4, data_of_books["link"])
-    worksheet.write(row, column + 5, data_of_books["year"])
-    worksheet.write(row, column + 6, data_of_books["publisher"])
-    worksheet.write(row, column + 7, data_of_books["description"])
+    worksheet.write_column(row, column, data_of_books['id'])
+    worksheet.write_column(row, column + 1, data_of_books["title"])
+    worksheet.write_column(row, column + 2, data_of_authors["name"])
+    worksheet.write_column(row, column + 3, data_of_genres["name"])
+    worksheet.write_column(row, column + 4, data_of_books["link"])
+    worksheet.write_column(row, column + 5, data_of_books["year"])
+    worksheet.write_column(row, column + 6, data_of_books["publisher"])
+    worksheet.write_column(row, column + 7, data_of_books["description"])
     row +=1
     
     workbook.close()
-
-library_info = write_data_to_xlsx()   
-print(get_data_from_books())
-print(get_data_from_authors())
-print(get_data_from_genres())

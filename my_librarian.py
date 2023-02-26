@@ -1,13 +1,14 @@
 from ebook_sql_db import books, authors, genres, favorite
 import tkinter as tk
-from tkinter import ttk, filedialog, Event, messagebox
+from tkinter import ttk, filedialog, messagebox
 import sqlite3
 from buttons import NegativeButton, PositiveButton
+from export_xls import write_data_to_xlsx
 
 
 class MyLibrarian:
     __doc__ = """
-    This class is designed to be used with the e-library.db
+    This class is designed to be used with e-library.db as GUI.
     """
 
     def __init__(self):
@@ -22,37 +23,42 @@ class MyLibrarian:
         self.main_frame.pack(fill=tk.BOTH, expand=True)
         
         
-        """Creation of the Menu buttons in the root window""" 
+        """Creation of Menu buttons in the root window""" 
     
         # button to add new book
-        self.add_book_button = PositiveButton(self.main_frame, text="Add New Book", command=self.add_book)
+        self.add_book_button = PositiveButton(self.main_frame, text="Add New Book", command=self.__add_book)
         self.add_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button to remove books
-        self.delete_book_button = PositiveButton(self.main_frame, text="Delete Books", command=self.delete_book)
+        self.delete_book_button = PositiveButton(self.main_frame, text="Delete Books", command=self.__delete_book)
         self.delete_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button to find books
-        self.find_book_button = PositiveButton(self.main_frame, text="Find a Book", command=self.find_book)
+        self.find_book_button = PositiveButton(self.main_frame, text="Find a Book", command=self.__find_book)
         self.find_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button Favorites
-        self.favorites_button = PositiveButton(self.main_frame, text="Favorites", command=self.favorites)
+        self.favorites_button = PositiveButton(self.main_frame, text="Favorites", command=self.__favorites)
         self.favorites_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button Help
-        self.help_button = PositiveButton(self.main_frame, text="Help", command=self.help_menu)
+        self.help_button = PositiveButton(self.main_frame, text="Help", command=self.__get_help)
         self.help_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # button Exit
         self.exit_button = PositiveButton(self.main_frame, text="Exit", command=self.main_window.destroy)
         self.exit_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
+        # button Export all books to xlsx
+        self.export_xlsx = PositiveButton(self.main_frame, text="Export to XLSX", command=self.__export_xlsx)
+        self.export_xlsx.configure(bg="olive")
+        self.export_xlsx.pack(side=tk.TOP, fill=tk.X, padx=10, pady=30)
+        
         """run main loop"""
         tk.mainloop()
         
     # self.add_book function
-    def add_book(self):
+    def __add_book(self):
         __doc__= """
         This function is used to prepare to add a new book to the e-library.db
         Function is called by the add_book_button. 
@@ -67,7 +73,8 @@ class MyLibrarian:
         self.new_book_window.grab_set()
         
         # building new window frame
-        self.new_book_frame = tk.Frame(self.new_book_window, borderwidth=1, relief="ridge", bg="dark slate gray")
+        self.new_book_frame = tk.Frame(self.new_book_window, borderwidth=1, 
+                                    relief="ridge", bg="dark slate gray")
         self.new_book_frame.pack(fill=tk.BOTH, expand=True)
         
         # Book's Title entry with its label
@@ -106,9 +113,16 @@ class MyLibrarian:
         self.description_lable = tk.Label(self.new_book_frame, text="Description: ",
                                         bg="dark slate gray", foreground="blanched almond",
                                         highlightbackground="blanched almond")
-        self.description_entry = tk.Text(self.new_book_frame, width=500, height=5, bg="slate gray")
+        self.description_entry = tk.Text(self.new_book_frame, bg="slate gray", wrap="word", width=500)
         self.description_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         self.description_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        
+        #Scrollbar for the description entry
+        self.description_scrollbar = tk.Scrollbar(self.description_entry, bg="blanched almond", width=14,
+                                                activebackground="coral")
+        self.description_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.description_entry.config(yscrollcommand=self.description_scrollbar.set)
+        self.description_scrollbar.config(command=self.description_entry.yview)
         
         # Book's Publisher entry with its label
         self.publisher_lable = tk.Label(self.new_book_frame, text="Publisher: ",
@@ -130,7 +144,7 @@ class MyLibrarian:
         
         
         # create ok button
-        self.ok_button = PositiveButton(self.new_book_frame, text="Ok", command=self.save_book_to_db)
+        self.ok_button = PositiveButton(self.new_book_frame, text="Ok", command=self.__save_book_to_db)
         self.ok_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # create exit button
@@ -138,44 +152,56 @@ class MyLibrarian:
         self.cancel_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
 
             
-    def save_book_to_db(self):
-        __doc__ = """
+    def __save_book_to_db(self):
+        """
         This function is used to write and confirm a new book to the e-library.db
         """
-        sqlite3.connect("e-library.db")
+        conn = None
         try:
-            authors.cursor.execute("INSERT INTO authors (name) VALUES (?)", (self.author_entry.get(),))
-            authors.conn.commit()
+            conn = sqlite3.connect("e-library.db")
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO authors (name) VALUES (?)", (self.author_entry.get(),))
+            cursor.execute("INSERT INTO genres (name) VALUES (?)", (self.genre_entry.get(),))
+            conn.commit()
         except sqlite3.Error as err:
             print(err, "Database error")
-            messagebox.showerror("Error", "Author is not added")
+            messagebox.showerror("Error", "Author or Genre is not added")
+        finally:
+            if conn != None:
+                conn.close()
         
         try:
-            genres.cursor.execute("INSERT INTO genres (name) VALUES (?)", (self.genre_entry.get(),))
-            genres.conn.commit()
+            conn = sqlite3.connect("e-library.db")
+            cursor = conn.cursor()
+            cursor.execute("""SELECT id FROM authors WHERE name =?""", (self.author_entry.get(),)) 
+            author_id = cursor.fetchone()[0]
+            genre = cursor.execute("""SELECT id FROM genres WHERE name =?""", (self.genre_entry.get(),))
+            genre_id = genre.fetchone()[0]
         except sqlite3.Error as err:
             print(err, "Database error")
-            messagebox.showerror("Error", "Genre is not added")
+            messagebox.showerror("Error", "Database error")
+        finally:
+            if conn is not None:
+                conn.close()
             
         try:
-            author = authors.cursor.execute("""SELECT id FROM authors WHERE name =?""", (self.author_entry.get(),)) 
-            author_id = author.fetchone()[0]
-            
-            genre = genres.cursor.execute("""SELECT id FROM genres WHERE name =?""", (self.genre_entry.get(),))
-            genre_id = genre.fetchone()[0]
-            
-            books.cursor.execute("""
+            conn = sqlite3.connect("e-library.db")
+            cur = conn.cursor()
+            cur.execute("""
                                 INSERT INTO books 
                                 (title, year, description, publisher, link, author_id, genre_id)
                                 VALUES (?, ?, ?, ?, ?, ?, ?)""",
                                     (self.title_entry.get(), self.release_year_entry.get(), 
                                     self.description_entry.get("1.0", tk.END), self.publisher_entry.get(), 
                                     self.filepath_entry_text.get(), (author_id), (genre_id),))
-            books.conn.commit()
+            conn.commit()
             
         except sqlite3.Error as err:
             print(err, "Database error")
             messagebox.showerror("Error", "Book is not added")
+        finally:
+            if conn != None:
+                conn.close()
                     
         self.new_book_window.destroy()
         
@@ -183,9 +209,8 @@ class MyLibrarian:
         
 
     # create self.delete_book function
-    def delete_book(self):
-        # create document
-        __doc__ = """
+    def __delete_book(self):
+        """
         This function is used to prepare listbox with book titles from books table 
         for selection to delete. This function is called by the delete_book_button.      
         """
@@ -216,7 +241,7 @@ class MyLibrarian:
             self.listbox.insert(tk.END, book[0])
         
         # create delete button
-        self.delete_button = PositiveButton(self.delete_frame, text="Delete", command=self.delete_this_book)
+        self.delete_button = PositiveButton(self.delete_frame, text="Delete", command=self.__delete_this_book)
         self.delete_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # create exit button
@@ -224,23 +249,28 @@ class MyLibrarian:
         self.cancel_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
     
-    def delete_this_book(self):
+    def __delete_this_book(self):
         __doc__ = """
         This function is used to delete selected book from the e-library.db
         """
         try:
-            books.cursor.execute("DELETE FROM books WHERE title =?", (self.listbox.get(self.listbox.curselection()[0]),))
+            books.cursor.execute(
+                "DELETE FROM books WHERE title =?", 
+                (self.listbox.get(self.listbox.curselection()[0]),)
+                )
             books.conn.commit()
             
         except sqlite3.Error as err:
             print(err, "Database error")
             messagebox.showerror("Error", "Book is not deleted")
+        finally:
+            books.conn.close()
         
             self.listbox.delete(self.listbox.curselection()[0])
         self.delete_window.destroy()
 
     # create self.find_book function
-    def find_book(self):
+    def __find_book(self):
         __doc__ = """
         This function is used to search books and authors from database. 
         This function is called by the find_book_button.      
@@ -279,9 +309,9 @@ class MyLibrarian:
         
         except sqlite3.Error as err:
             print(err, "Database error")
-    
+        
         # create open book button
-        self.open_book_button = PositiveButton(self.search_window, text="Show Book", command=self.open_this_book_details)
+        self.open_book_button = PositiveButton(self.search_window, text="Show Book", command=self.__open_this_book_details)
         self.open_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # create add book to favorites button
@@ -295,7 +325,7 @@ class MyLibrarian:
     
     
     # create self.open_this_book_details function
-    def open_this_book_details(self):
+    def __open_this_book_details(self):
         __doc__ = """
         This function is used to open information about selected book from the table "books"
         """
@@ -384,10 +414,13 @@ class MyLibrarian:
         except sqlite3.Error as err:
             print(err, "Database error")
             messagebox.showerror("Error", err)
+        
+        finally:
+            favorite.conn.close()
     
     
     # create self.favorites function
-    def favorites(self):
+    def __favorites(self):
         __doc__ = """
         This function is used to store favorite books for easy access.
         """
@@ -433,12 +466,12 @@ class MyLibrarian:
         
         # create delete favorites button
         self.delete_favorites_button = PositiveButton(self.favorites_window, text="Delete Favorites",
-                                            command=self.delete_favorites)
+                                            command=self.__delete_favorites)
         self.delete_favorites_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # create open fave book button
         self.open_fave_button = PositiveButton(self.favorites_window, text="Open",
-                                                    command=self.open_fave_book)
+                                                    command=self.__open_fave_book)
         self.open_fave_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # create exit button
@@ -448,7 +481,7 @@ class MyLibrarian:
         
 
     # create self.delete_favorites function
-    def delete_favorites(self):
+    def __delete_favorites(self):
         __doc__ = """
         """
         fave_book_index = self.favorites_list.curselection()[0]
@@ -464,10 +497,13 @@ class MyLibrarian:
             print(err, "Database error")
             messagebox.showerror("Error", err)
         
+        finally:
+            favorite.conn.close()
+        
         self.favorites_list.delete(fave_book_index)
 
     # create self.open_fave_book function
-    def open_fave_book(self):
+    def __open_fave_book(self):
         __doc__ = """
         """
         fave_book_index = self.favorites_list.curselection()[0]
@@ -497,13 +533,19 @@ class MyLibrarian:
         self.display_book_details(title = fave_book, link = book_link, publisher = book_publisher, 
                                 description = book_description, year = book_year, 
                                 author = book_author, genre = book_genre)
-        
+        fave_book_details.close()
     
     
     # create self.help function
-    def help_menu(self):
+    def __get_help(self):
         pass
     
+    # create self.export_xls function
+    def __export_xlsx(self):
+        __doc__ = """
+        """
+        write_data_to_xlsx()
+        messagebox.showinfo("Export", "All books exported to xlsx file")
     
 
 if __name__ == "__main__":

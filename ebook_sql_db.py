@@ -11,9 +11,8 @@ path = os.path.dirname(os.path.abspath(__file__))
 class Database(object):
     def __init__(self):
         self.conn = None
-        self.cursor = None
         try:
-            self.conn = sqlite3.connect(os.path.join(path, 'e-library.db'))
+            self.conn = sqlite3.connect('e-library.db')
             self.conn.row_factory = sqlite3.Row
             self.cursor = self.conn.cursor()
             self.cursor.execute('PRAGMA foreign_keys = ON')
