@@ -1,10 +1,13 @@
 from ebook_sql_db import books, authors, genres, favorite
 import tkinter as tk
-from tkinter import ttk, filedialog, messagebox
+from tkinter import filedialog, messagebox, PhotoImage
 import sqlite3
 from buttons import NegativeButton, PositiveButton
 from export_xls import write_data_to_xlsx
+import os
 
+path = os.path.dirname(os.path.abspath(__file__))
+img_path = os.path.join(path + '/media/librarian.png')
 
 class MyLibrarian:
     __doc__ = """
@@ -19,9 +22,18 @@ class MyLibrarian:
         self.main_window.resizable(False, False)
         
         # creation of the main_window frame
-        self.main_frame = tk.Frame(self.main_window, borderwidth=1, relief="ridge", background="dark slate gray")
+        self.main_frame = tk.Frame(self.main_window, relief="ridge")
         self.main_frame.pack(fill=tk.BOTH, expand=True)
         
+        self.bg = PhotoImage(file=img_path)
+        
+        # Show image using label
+        self.img_label = tk.Label(self.main_frame, image=self.bg)
+        self.img_label.place(x=0, y=0, relwidth=1, relheight=1)
+        
+        # Create image frame
+        self.img_frame = tk.Frame(self.main_frame)
+        self.img_frame.pack(pady=20)
         
         """Creation of Menu buttons in the root window""" 
     
@@ -31,29 +43,29 @@ class MyLibrarian:
         
         # button to remove books
         self.delete_book_button = PositiveButton(self.main_frame, text="Delete Books", command=self.__delete_book)
-        self.delete_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        self.delete_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=10)
         
         # button to find books
         self.find_book_button = PositiveButton(self.main_frame, text="Find a Book", command=self.__find_book)
-        self.find_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        self.find_book_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=10)
         
         # button Favorites
         self.favorites_button = PositiveButton(self.main_frame, text="Favorites", command=self.__favorites)
-        self.favorites_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
-        
-        # button Help
-        self.help_button = PositiveButton(self.main_frame, text="Help", command=self.__get_help)
-        self.help_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
-        
-        # button Exit
-        self.exit_button = PositiveButton(self.main_frame, text="Exit", command=self.main_window.destroy)
-        self.exit_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
+        self.favorites_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=10)
         
         # button Export all books to xlsx
         self.export_xlsx = PositiveButton(self.main_frame, text="Export to XLSX", command=self.__export_xlsx)
-        self.export_xlsx.configure(bg="olive")
-        self.export_xlsx.pack(side=tk.TOP, fill=tk.X, padx=10, pady=30)
+        #self.export_xlsx.configure(bg="IndianRed4")
+        self.export_xlsx.pack(side=tk.TOP, fill=tk.X, padx=10, pady=10)
         
+        # button Help
+        self.help_button = PositiveButton(self.main_frame, text="Help", command=self.__get_help)
+        self.help_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=10)
+        
+        # button Exit
+        self.exit_button = PositiveButton(self.main_frame, text="Exit", command=self.main_window.destroy)
+        self.exit_button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=10)
+                
         """run main loop"""
         tk.mainloop()
         
@@ -74,46 +86,45 @@ class MyLibrarian:
         
         # building new window frame
         self.new_book_frame = tk.Frame(self.new_book_window, borderwidth=1, 
-                                    relief="ridge", bg="dark slate gray")
+                                    relief="ridge", bg="MistyRose4")
         self.new_book_frame.pack(fill=tk.BOTH, expand=True)
         
         # Book's Title entry with its label
         self.title_lable = tk.Label(self.new_book_frame, text="Book's title: ", 
-                                    bg="dark slate gray", foreground="blanched almond")
-        self.title_entry = tk.Entry(self.new_book_frame, bg="slate gray",
+                                    bg="MistyRose4")
+        self.title_entry = tk.Entry(self.new_book_frame, bg="blanched almond",
                                     highlightbackground="blanched almond")
         self.title_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         self.title_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # Book's Author entry with its label
         self.author_lable = tk.Label(self.new_book_frame, text="Author's name: ",
-                                    bg="dark slate gray", foreground="blanched almond")
-        self.author_entry = tk.Entry(self.new_book_frame, bg="slate gray",
+                                    bg="MistyRose4")
+        self.author_entry = tk.Entry(self.new_book_frame, bg="blanched almond",
                                     highlightbackground="blanched almond")
         self.author_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         self.author_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # Book's Genre entry with its label
         self.genre_lable = tk.Label(self.new_book_frame, text="Genre: ",
-                                    bg="dark slate gray", foreground="blanched almond")
-        self.genre_entry = tk.Entry(self.new_book_frame, bg="slate gray",
+                                    bg="MistyRose4")
+        self.genre_entry = tk.Entry(self.new_book_frame, bg="blanched almond",
                                     highlightbackground="blanched almond")
         self.genre_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         self.genre_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # Book's Release year entry with its label
         self.release_year_lable = tk.Label(self.new_book_frame, text="Release year: ",
-                                        bg="dark slate gray", foreground="blanched almond")
-        self.release_year_entry = tk.Entry(self.new_book_frame, bg="slate gray",
+                                        bg="MistyRose4")
+        self.release_year_entry = tk.Entry(self.new_book_frame, bg="blanched almond",
                                         highlightbackground="blanched almond")
         self.release_year_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         self.release_year_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # Book's Description entry for Text with its label
         self.description_lable = tk.Label(self.new_book_frame, text="Description: ",
-                                        bg="dark slate gray", foreground="blanched almond",
-                                        highlightbackground="blanched almond")
-        self.description_entry = tk.Text(self.new_book_frame, bg="slate gray", wrap="word", width=500)
+                                        bg="MistyRose4", highlightbackground="blanched almond")
+        self.description_entry = tk.Text(self.new_book_frame, bg="blanched almond", wrap="word", width=500)
         self.description_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         self.description_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
@@ -126,18 +137,18 @@ class MyLibrarian:
         
         # Book's Publisher entry with its label
         self.publisher_lable = tk.Label(self.new_book_frame, text="Publisher: ",
-                                        bg="dark slate gray", foreground="blanched almond")
-        self.publisher_entry = tk.Entry(self.new_book_frame, bg="slate gray",
+                                        bg="MistyRose4")
+        self.publisher_entry = tk.Entry(self.new_book_frame, bg="blanched almond",
                                         highlightbackground="blanched almond")
         self.publisher_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         self.publisher_entry.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         
         # Book's filepath on the file system
         self.filepath_lable = tk.Label(self.new_book_frame, text="Filepath to your book: ",
-                                    bg="dark slate gray", foreground="blanched almond")
+                                    bg="MistyRose4")
         self.filepath_lable.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         self.filepath_entry = filedialog.askopenfilename()
-        self.filepath_entry_text = tk.Entry(self.new_book_frame, bg="slate gray",
+        self.filepath_entry_text = tk.Entry(self.new_book_frame, bg="blanched almond",
                                             highlightbackground="blanched almond")
         self.filepath_entry_text.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
         self.filepath_entry_text.insert(tk.END, (self.filepath_entry))
