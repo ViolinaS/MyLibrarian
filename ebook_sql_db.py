@@ -8,7 +8,7 @@ This module contains the database and tables of the project.
 """
 class Database(object):
     def __init__(self):
-        self.conn = None
+        
         try:
             self.conn = sqlite3.connect('e-library.db')
             self.conn.row_factory = sqlite3.Row
