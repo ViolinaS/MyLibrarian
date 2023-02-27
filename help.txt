@@ -1,0 +1,7 @@
+<Add New Book> - opens field with entries to add a new book into database.
+<Delete Books> - opens Menu with list of all books in database to choose and delete
+<Find a Book> - opens Menu with list of all books in database and lets to check each book details,
+and add a book to Favorite list.
+<Favorites> - shows the list\n of all favorite books in database with possibility to delete
+books from favorites.
+<Export to XLSX> - exports all books from database to XLSX file."

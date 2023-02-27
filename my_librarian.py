@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, PhotoImage
 import sqlite3
 from buttons import NegativeButton, PositiveButton
-from export_xls import write_data_to_xlsx
+from export import write_data_to_xlsx
 import os
 
 path = os.path.dirname(os.path.abspath(__file__))
@@ -235,13 +235,13 @@ class MyLibrarian:
         self.delete_window.grab_set()
         
         # building new window frame
-        self.delete_frame = tk.Frame(self.delete_window, borderwidth=1, relief="ridge", bg="dark slate gray")
+        self.delete_frame = tk.Frame(self.delete_window, borderwidth=1, relief="ridge", bg="MistyRose4")
         self.delete_frame.pack(fill=tk.BOTH, expand=True)
         
         # create listbox wiget for all books in the database
-        self.listbox = tk.Listbox(self.delete_frame, bg="dark slate gray",
-                                foreground="blanched almond", selectmode=tk.MULTIPLE,
-                                selectbackground="coral", selectforeground="black",
+        self.listbox = tk.Listbox(self.delete_frame, bg="MistyRose4",
+                                selectmode=tk.MULTIPLE, selectbackground="IndianRed4", 
+                                selectforeground="blanched almond",
                                 cursor="hand2", activestyle="none")
         self.listbox.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=10, pady=5)
         
@@ -283,11 +283,11 @@ class MyLibrarian:
     # create self.find_book function
     def __find_book(self):
         __doc__ = """
-        This function is used to search books and authors from database. 
+        This function shows all books from the database in the one list. 
         This function is called by the find_book_button.      
         """
         # building new window
-        self.search_window = tk.Toplevel(self.main_window, bg="dark slate gray")
+        self.search_window = tk.Toplevel(self.main_window, bg="MistyRose4")
         self.search_window.title("Let's find a book")
         self.search_window.geometry("300x500")
         self.search_window.resizable(False, False)
@@ -295,19 +295,19 @@ class MyLibrarian:
         self.search_window.grab_set()
         
         # building new window frames
-        self.search_frame_all_books = tk.Frame(self.search_window, borderwidth=1,
-                                            relief="ridge", bg="dark slate gray")
+        self.search_frame_all_books = tk.Frame(self.search_window, 
+                                            relief="ridge", bg="MistyRose4")
         self.search_frame_all_books.pack(fill=tk.BOTH, expand=True)
         
         # create listbox wiget for all books in the database
-        self.listbox_all_books = tk.Listbox(self.search_frame_all_books, bg="dark slate gray",
-                                    foreground="blanched almond", selectmode=tk.SINGLE,
-                                    selectbackground="coral", selectforeground="black",
+        self.listbox_all_books = tk.Listbox(self.search_frame_all_books, bg="MistyRose4",
+                                    selectmode=tk.SINGLE, selectbackground="IndianRed4",
+                                    selectforeground="blanched almond",
                                     cursor="hand2", activestyle="none")
         self.listbox_all_books.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=10, pady=5)
         # create Scrollbar widget for listbox_all_books
         self.listbox_all_books_scroll = tk.Scrollbar(self.listbox_all_books, width=14,
-                                            bg="blanched almond", activebackground="coral")
+                                            bg="blanched almond", activebackground="IndianRed4")
         self.listbox_all_books_scroll.pack(side=tk.RIGHT, fill=tk.Y)
         self.listbox_all_books.config(yscrollcommand=self.listbox_all_books_scroll.set)
         self.listbox_all_books_scroll.config(command=self.listbox_all_books.yview)
@@ -379,23 +379,23 @@ class MyLibrarian:
         __doc__ = """
         This method is used to display information about selected book from the table "books"
         """
-        self.book_details_window = tk.Toplevel(self.main_window, bg="dark slate gray")
+        self.book_details_window = tk.Toplevel(self.main_window, bg="MistyRose4")
         self.book_details_window.title("Book Details")
         self.book_details_window.geometry("300x500")
         self.book_details_window.resizable(False, False)
         self.book_details_window.transient(self.main_window)
         self.book_details_window.grab_set()
         
-        self.book_details_frame = tk.Frame(self.book_details_window, relief="ridge", bg="dark slate gray")
+        self.book_details_frame = tk.Frame(self.book_details_window, relief="ridge", bg="MistyRose4")
         self.book_details_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
                         
         # create text widget inside book_details_frame
-        self.book_text_info = tk.Text(self.book_details_frame, wrap="word", bg="dark slate gray", fg="blanched almond")
+        self.book_text_info = tk.Text(self.book_details_frame, wrap="word", bg="MistyRose4")
         self.book_text_info.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
         
         # create Scrollbar widget for book_text_info
-        self.book_text_info_scroll = tk.Scrollbar(self.book_text_info, width=14,
-                                            bg="blanched almond", activebackground="coral")
+        self.book_text_info_scroll = tk.Scrollbar(self.book_text_info, width=14, cursor="hand2",
+                                            bg="blanched almond", activebackground="IndianRed4")
         self.book_text_info_scroll.pack(side=tk.RIGHT, fill=tk.Y)
         self.book_text_info.config(yscrollcommand=self.book_text_info_scroll.set)
         self.book_text_info_scroll.config(command=self.book_text_info.yview)
@@ -411,8 +411,8 @@ class MyLibrarian:
         self.close_book_button.pack(side=tk.BOTTOM, fill=tk.BOTH, padx=10, pady=5)
         
     def add_favorites(self):
-        __doc__ = """
-        """
+        """This function adds books to Favorites and updates the database for table Favorite_shelf"""
+        
         fave_book_index = self.listbox_all_books.curselection()[0]
         fave_book = self.listbox_all_books.get(fave_book_index)
         try:
@@ -432,27 +432,26 @@ class MyLibrarian:
     
     # create self.favorites function
     def __favorites(self):
-        __doc__ = """
-        This function is used to store favorite books for easy access.
-        """
+        """This function is used to show favorite books separately from others"""
+        
         #create listbox with scrollbar in a new window
-        self.favorites_window = tk.Toplevel(self.main_window, bg="dark slate gray")
+        self.favorites_window = tk.Toplevel(self.main_window, bg="MistyRose4")
         self.favorites_window.title("My Favorite Books")
         self.favorites_window.geometry("300x500")
         self.favorites_window.resizable(False, False)
         self.favorites_window.transient(self.main_window)
         self.favorites_window.grab_set()
         
-        self.favorites_frame = tk.Frame(self.favorites_window, relief="ridge", bg="dark slate gray")
+        self.favorites_frame = tk.Frame(self.favorites_window, relief="ridge", bg="MistyRose4")
         self.favorites_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
     
-        self.favorites_list = tk.Listbox(self.favorites_frame, bg="dark slate gray", selectmode=tk.MULTIPLE,
-                                        selectbackground="coral", selectforeground="black",
+        self.favorites_list = tk.Listbox(self.favorites_frame, bg="MistyRose4", selectmode=tk.MULTIPLE,
+                                        selectbackground="IndianRed4", selectforeground="blanched almond",
                                         cursor="hand2", activestyle="none")
         self.favorites_list.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=10, pady=5)
         
-        self.favorites_scroll = tk.Scrollbar(self.favorites_list, width=14,
-                                            bg="blanched almond", activebackground="coral")
+        self.favorites_scroll = tk.Scrollbar(self.favorites_list, width=14, cursor="hand2",
+                                            bg="blanched almond", activebackground="IndianRed4")
         self.favorites_scroll.pack(side=tk.RIGHT, fill=tk.Y)
         
         self.favorites_list.config(yscrollcommand=self.favorites_scroll.set)
@@ -493,8 +492,8 @@ class MyLibrarian:
 
     # create self.delete_favorites function
     def __delete_favorites(self):
-        __doc__ = """
-        """
+        """This function deletes selected favorite books from the database, table favorite_shelf"""
+        
         fave_book_index = self.favorites_list.curselection()[0]
         fave_book = self.favorites_list.get(fave_book_index)
         
@@ -515,8 +514,8 @@ class MyLibrarian:
 
     # create self.open_fave_book function
     def __open_fave_book(self):
-        __doc__ = """
-        """
+        """This function shows details of selected book from Favorite list."""
+        
         fave_book_index = self.favorites_list.curselection()[0]
         fave_book = self.favorites_list.get(fave_book_index)
                 
@@ -549,15 +548,34 @@ class MyLibrarian:
     
     # create self.help function
     def __get_help(self):
-        pass
-    
+        """This function is used to display the help information about the application."""
+        
+        with open("help.txt", "r") as f:
+            text = f.read()
+                
+        self.help_window = tk.Toplevel(self.main_window, bg="MistyRose4")
+        self.help_window.geometry("300x500")
+        self.help_window.resizable(False, False)
+        self.help_window.transient(self.main_window)
+        self.help_window.title("Help")
+        
+        self.help_text = tk.Text(self.help_window, bg="MistyRose4", wrap="word")
+        self.help_text.pack(fill=tk.BOTH, padx=10, pady=5, expand=True)
+        self.help_text.insert(tk.END, text)
+        self.help_text_close_button = NegativeButton(self.help_window, text="Close", 
+                                                    command=self.help_window.destroy)
+        self.help_text_close_button.pack(side=tk.BOTTOM, fill=tk.BOTH, padx=10, pady=5)
+        
+            
     # create self.export_xls function
     def __export_xlsx(self):
-        __doc__ = """
+        """This function is used to export the data from the database to xlsx file.
+        Data to be exported: book's title, book's link, book's publisher, book's description, 
+        book's year, book's author = authors.name, book's genre = genres.name
         """
         write_data_to_xlsx()
-        messagebox.showinfo("Export", "All books exported to xlsx file")
-    
+        messagebox.showinfo("Export", "All books exported to xlsx file")        
+
 
 if __name__ == "__main__":
     librarian = MyLibrarian()

@@ -1,13 +1,11 @@
 import sqlite3
 from sqlite3 import Error
-import os
+
 
 
 __doc__ = """
 This module contains the database and tables of the project.
 """
-path = os.path.dirname(os.path.abspath(__file__))
-
 class Database(object):
     def __init__(self):
         self.conn = None
