@@ -17,7 +17,7 @@ DATABASE: [ebook_sql_db.py](https://github.com/ViolinaS/my-librarian/blob/main/e
 * All information about e-books is stored in the SQLite database.
 * There are 4 tables in the [database](https://github.com/ViolinaS/my-librarian/blob/main/ebook_sql_db.py): books, authors, favorite_shelf, genres.
 
-Database relation mapping:
+Database relations mapping:
 
 ![SQLite](https://github.com/ViolinaS/my-librarian/blob/main/media/my-librarian.png)
 
