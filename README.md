@@ -8,7 +8,25 @@
 
 ### Application fitures
 
-DATABASE: [ebook_sql_db.py](https://github.com/ViolinaS/my-librarian/blob/main/ebook_sql_db.py)
+![main_window](https://github.com/ViolinaS/my-librarian/blob/b2c88bda0244cde59dcbe1418a31009831afb3e2/media/main_window.png) ![book_details](https://github.com/ViolinaS/my-librarian/blob/b2c88bda0244cde59dcbe1418a31009831afb3e2/media/book_details.png)
+
+MENU
+
+* Add New Book
+  * *Adds new books into library interface, inserts and commits changes into database by OK button.*
+* Delete Books
+  * *Deletes books from library interface, commits changes into database by OK button.*
+* Find a Book
+  * *Shows all current books in the database, lets to add books into Favorites and openes selected book details in separate window*
+* Favorites
+  * *Shows all books chosen as favorite previously in new window, lets to delete books from favorite list and commits changes to database, opens fave book details.*
+* Export to XLSX
+  * *Creates xlsx file from SQLite tables data, includes all books from database*
+  * *Exports Book's: id, title, year(of release), description, publisher, link with filepath to the book, author's name, genre's name*
+
+DATABASE
+
+[ebook_sql_db.py](https://github.com/ViolinaS/my-librarian/blob/main/ebook_sql_db.py)
 
 * All information about e-books is stored in the SQLite database.
 * There are 4 tables in the [database](https://github.com/ViolinaS/my-librarian/blob/main/ebook_sql_db.py): books, authors, favorite_shelf, genres.
