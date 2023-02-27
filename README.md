@@ -10,6 +10,8 @@
 
 ### Application fitures
 
+![root](https://github.com/ViolinaS/my-librarian/blob/main/media/root_window.png) ![find_book](https://github.com/ViolinaS/my-librarian/blob/main/media/find_book.png) ![details](https://github.com/ViolinaS/my-librarian/blob/main/media/book_details.png)
+
 DATABASE: [ebook_sql_db.py](https://github.com/ViolinaS/my-librarian/blob/main/ebook_sql_db.py)
 
 * All information about e-books is stored in the SQLite database.
