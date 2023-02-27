@@ -6,7 +6,7 @@
 
 ## Small application with GUI to manage your electronic books collection as library
 
----
+
 
 ### Application fitures
 
@@ -19,8 +19,4 @@ Database relation mapping:
 
 ![SQLite](https://github.com/ViolinaS/my-librarian/blob/main/media/my-librarian.png)
 
-* table books contains Book's: id, title, author_id, genre_id, year(of release), link as a filepath,
-description, publisher.
-* table authors contains Author's: id, name
-* table genres contains Genre's: id, name
-* table favorite_shelf contains id, book_id
+
