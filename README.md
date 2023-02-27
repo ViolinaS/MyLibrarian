@@ -6,15 +6,7 @@
 
 ## Small application with GUI to manage your electronic books collection as library
 
-
-
 ### Application fitures
-
-<<<<<<< HEAD
-![root](https://github.com/ViolinaS/my-librarian/blob/main/media/root_window.png) ![find_book](https://github.com/ViolinaS/my-librarian/blob/main/media/find_book.png) ![details](https://github.com/ViolinaS/my-librarian/blob/main/media/book_details.png)
-=======
-![main_window](media/main_window.png) ![find_book](media/find_books.png)
->>>>>>> fe403f9 (modified readme)
 
 DATABASE: [ebook_sql_db.py](https://github.com/ViolinaS/my-librarian/blob/main/ebook_sql_db.py)
 
@@ -23,6 +15,4 @@ DATABASE: [ebook_sql_db.py](https://github.com/ViolinaS/my-librarian/blob/main/e
 
 Database relations mapping:
 
-![SQLite](https://github.com/ViolinaS/my-librarian/blob/main/media/my-librarian.png)
-
-
+![SQLite](https://github.com/ViolinaS/my-librarian/blob/c816f707e097f7741aff29a723896530545e4c60/media/my-librarian.png)
