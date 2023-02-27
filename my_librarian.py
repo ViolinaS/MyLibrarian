@@ -390,7 +390,7 @@ class MyLibrarian:
         self.book_details_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
                         
         # create text widget inside book_details_frame
-        self.book_text_info = tk.Text(self.book_details_frame, wrap="word", bg="MistyRose4")
+        self.book_text_info = tk.Text(self.book_details_frame, wrap="char", bg="MistyRose4")
         self.book_text_info.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
         
         # create Scrollbar widget for book_text_info
