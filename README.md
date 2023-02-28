@@ -14,6 +14,7 @@
 
 * Add New Book
   * *Adds new books into library interface, inserts and commits changes into database by OK button.*
+  * *Filepath to books are being generated using Filedialog (Tkinter)*
 * Delete Books
   * *Deletes books from library interface, commits changes into database by OK button.*
 * Find a Book
