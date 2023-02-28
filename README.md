@@ -42,3 +42,5 @@ Database relations mapping:
 ### Launch [my-librarian.py](https://github.com/ViolinaS/my-librarian/blob/bd6a3423db9abf075a6b3273fe6209b66f0cd6cc/my_librarian.py) to run this application
 
 ### Database, tables, xlsx file are being created automatically upon run the application and using GUI first time.
+
+>> ![Add](https://github.com/ViolinaS/MyLibrarian/blob/main/media/add_new_book.png) ![Find](https://github.com/ViolinaS/MyLibrarian/blob/main/media/find_books.png)
