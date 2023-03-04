@@ -44,4 +44,3 @@ Database relations mapping:
 
 ### Database, tables, xlsx file are being created automatically upon run the application and using GUI first time.
 
->> ![Add](https://github.com/ViolinaS/MyLibrarian/blob/main/media/add_new_book.png) ![Find](https://github.com/ViolinaS/MyLibrarian/blob/main/media/find_books.png)
